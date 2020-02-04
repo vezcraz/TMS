@@ -1,5 +1,28 @@
+# all sorts of logs
 **/logs
+*.log
+
+# __pycache__
 **/__pycache__/
+
+# database
 db.sqlite3
+
+# all editor related stuff
 **/.vscode/
-**/migrations/
+.idea/
+*.iws
+out/
+.idea_modules/
+
+# media folder
+media/
+
+# dotenv
+.env
+
+# virtualenv
+env/
+venv/
+ENV/
+

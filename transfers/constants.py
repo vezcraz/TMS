@@ -3,9 +3,10 @@ import enum
 
 class UserType(enum.Enum):
     STUDENT = 0
-    AD = 1
+    SUPERVISOR = 1
     HOD = 2
-    PSD = 3
+    AD = 3
+    PSD = 4
 
 
 class TransferType(enum.Enum):
