@@ -7,10 +7,17 @@ from .constants import CampusType, TransferType, UserType
 
 
 class UserProfile(models.Model):
+    """
+    Profile model for each User in the app.
+    Keep fields nullable to create a corresponding
+    UserProfile model isntance automatically once a User
+    model instance is created.
+    """
     user_choices = [
         (UserType.STUDENT.value, 'Student'),
-        (UserType.AD.value, 'Associate Dean'),
+        (UserType.SUPERVISOR.value, 'Supervisor'),
         (UserType.HOD.value, 'Head of Department'),
+        (UserType.AD.value, 'Associate Dean'),
         (UserType.PSD.value, 'PS-Division'),
     ]
     campus_choices = [
@@ -37,19 +44,11 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     instance.userprofile.save()
 
 
-class Application(models.Model):
-    transfer_choices = [
-        (TransferType.PS2TS.value, 'PS to TS'),
-        (TransferType.TS2PS.value, 'TS to PS'),
-    ]
-
-    applicant = models.OneToOneField(UserProfile, primary_key=True,
-        on_delete=models.CASCADE)
-    cgpa = models.DecimalField(max_digits=6, decimal_places=2)
-    transfer_type = models.IntegerField(choices=transfer_choices)
-
-
 class PS2TSTransfer(models.Model):
+    """
+    Model to store the information for
+    PS --> TS transfer related queries
+    """
     PS2TS = 0
     OTHER = 1
     sub_type_choices = [
@@ -65,34 +64,52 @@ class PS2TSTransfer(models.Model):
         (OFF_CAMPUS_INDIA, 'Off Campus (India)'),
         (OFF_CAMPUS_ABROAD, 'Off Campus Abroad'),
     ]
-
-    application = models.OneToOneField(Application, primary_key=True,
+    # linking the application with its applicant
+    applicant = models.OneToOneField(UserProfile, primary_key=True,
         on_delete=models.CASCADE)
+    # corresponding on-campus supervisor
+    supervisor_email = models.EmailField()
+    # corresponding hod
+    hod_email = models.EmailField()
+    # sub-type for application; see choices above
+    sub_type = models.IntegerField(choices=sub_type_choices)
+    # other details required for the form
+    cgpa = models.DecimalField(max_digits=6, decimal_places=2)
     thesis_locale = models.IntegerField(choices=thesis_locale_choices)
     thesis_subject = models.CharField(max_length=150,
         help_text='Broad area/Title of Thesis')
     name_of_org = models.CharField(max_length=100,
         help_text='Name of BITS Campus or Organization where thesis will be carried')
-    supervisor_name = models.CharField(max_length=100)
-    supervisor_email = models.EmailField()
     expected_deliverables = models.TextField(help_text='Expected outcome of thesis')
-    hod_email = models.EmailField()
+    # fields to note the status of the application
+    is_supervisor_approved = models.BooleanField(default=False)
+    is_hod_approved = models.BooleanField(default=False)
 
 
 class TS2PSTransfer(models.Model):
-   TS2PS = 0
-   PSTS2PSPS = 1
-   TSTS2TSPS = 2
-   sub_type_choices = [
-    (TS2PS, 'TS to PS (Single Degree)'),
-    (PSTS2PSPS, 'PS-TS to PS-PS (Dual Degree)'),
-    (TSTS2TSPS, 'TS-TS to TS-PS (Dual Degree)'),
-    ]
-
-   application = models.OneToOneField(Application, primary_key=True,
+    """
+    Model to store the information for
+    TS --> PS transfer related queries
+    """
+    TS2PS = 0
+    PSTS2PSPS = 1
+    TSTS2TSPS = 2
+    sub_type_choices = [
+        (TS2PS, 'TS to PS (Single Degree)'),
+        (PSTS2PSPS, 'PS-TS to PS-PS (Dual Degree)'),
+        (TSTS2TSPS, 'TS-TS to TS-PS (Dual Degree)'),
+        ]
+    # linking application with its applicant
+    applicant = models.OneToOneField(UserProfile, primary_key=True,
         on_delete=models.CASCADE)
-   sub_type = models.IntegerField(choices=sub_type_choices)
-   reson_for_transfer = models.TextField()
-   name_of_org = models.CharField(max_length=100,
-        help_text='Name of BITS Campus or Organization where thesis was being carried')
-   hod_email = models.EmailField()
+    # corresponding hod
+    hod_email = models.EmailField()
+    # sub-type for application; see choices above
+    sub_type = models.IntegerField(choices=sub_type_choices)
+    # other details required for the form
+    cgpa = models.DecimalField(max_digits=6, decimal_places=2)
+    reson_for_transfer = models.TextField()
+    name_of_org = models.CharField(max_length=100,
+            help_text='Name of BITS Campus or Organization where thesis was being carried')
+    # field to note the status of the application
+    is_hod_approved = models.BooleanField(default=False)
