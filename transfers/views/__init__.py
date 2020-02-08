@@ -1,0 +1,1 @@
+from .redirect_views import login_redirect_view
