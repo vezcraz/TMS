@@ -1,0 +1,174 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9">
+    <title>Supervisor Portal</title>
+
+    <!-- Jquery CDN -->
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+
+    <!-- Bootstrap CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+    <!-- Vue CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script> -->
+
+    <!-- Custom CSS/ Js -->
+    <!-- <script src="js/custom.js"></script> -->
+    <link rel="stylesheet" href="custom.css"/>
+
+
+</head>
+<body class="bg-light">
+  <div id="app" class="border">
+      <nav class="m-0 p-0 navbar navbar-expand-lg">
+          <a class="navbar-brand" href="#"> <img src="assets/bp-logo.gif" alt=""></a>
+        
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ml-auto mr-2">
+              <li class="nav-item">
+                <img src="assets/profile-img.png" class="img " style="display:inline; height:70px; width:75px;" alt="dsad"> 
+              </li>
+
+              <li class="nav-item my-auto ml-auto px-3">
+                <span style="line-height: .4; font-size: large;" class="" >    Welcome {{user.username}} !</span> 
+               <br> <a class="" href="#" data-toggle="modal" data-target="#userProfileModal" >View Profile</a>
+              </li>
+             
+            </ul>
+          </div>
+        </nav>
+        
+        <h3 class="h3 text-center" style="line-height: 0.4; font-family: Georgia, 'Times New Roman', Times, serif;">PS TO TS Transfer Portal</h3>
+        <hr>
+        
+      <section class="row container-fluid">    
+        
+          <label class="switch m-auto">
+              <input class="switch-input"  v-model="showApproved" type="checkbox" />
+              <span class="switch-label"  data-on="Aprooved Requests" data-off="Pending Requests"></span> 
+              <span class="switch-handle"></span> 
+          </label>
+
+         
+    </section>
+    
+       <section class="row mt-3 container-fluid d-flex justify-content-around ">
+        <div v-if="!showApproved" v-for="student in data_pending" id="pending-card" class="table-primary container-fluid rounded my-2  col-md-3">
+          <div @click="modal_student=student" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
+              <table  id="student-details-table" class="table mt-2">
+                <tr v-for="attr in student_pending_attributes">
+                  <td class="text-left"><strong>{{attr.display}}</strong> </td>
+                  <td id="text-overflow" >{{student[attr.prop]}}</td>
+                </tr>
+              </table>
+          </div>
+          <div class="text-center d-flex justify-content-around align-items-center">
+               <button class="btn btn-sm  btn-outline-success text-center mb-2">Approve Request</button>
+               <button class="btn btn-sm btn-outline-danger text-center mb-2">Reject Request</button>
+          </div>
+        </div>
+
+        <div v-if="showApproved" v-for="student in data_pending" id="pending-card" class="table-success container-fluid rounded my-2  col-md-3">
+          <div @click="modal_student=student" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
+              <table  id="student-details-table" class="table mt-2">
+                <tr v-for="attr in student_pending_attributes">
+                  <td class="text-left"><strong>{{attr.display}}</strong> </td>
+                  <td id="text-overflow" >{{student[attr.prop]}}</td>
+                </tr>
+              </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- Application Details Modal -->
+    
+      <div class="modal fade" id="applicationDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+          <div class="modal-content" v-bind:class="{'table-success' :showApproved, 'table-primary':!showApproved}">
+            <div class="modal-header" v-bind:class="{'table-success' :showApproved, 'table-primary':!showApproved}">
+              <h5 class="modal-title text-center" >Applicant Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body ">
+
+              <table  id="student-details-modal-table" class="table mt-2">
+                <tr v-for="attr in student_pending_attributes">
+                  <td class="text-left"><strong>{{attr.display}}</strong> </td>
+                  <td >{{modal_student[attr.prop]}}</td>
+                </tr>
+              </table>
+             
+            </div>
+           
+          </div>
+        </div>
+      </div>
+
+      <!-- User Profile Modal -->
+      
+      <div class="modal fade" id="userProfileModal" tabindex="-1" role="dialog" >
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header" v-bind:class="{'table-success' :showApproved, 'table-primary':!showApproved}">
+              <h5 class="modal-title text-center" >User Profile</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <table  id="user-details-modal-table" class="table d-flex justify-content-center mt-2">
+                <tr>
+                 <td> Name</td><td><input class="form-control" name="name" type="textbox" v-model="user.username" disabled></td>
+                </tr>
+                <tr>
+                  <td> Designation</td><td><input class="form-control" name="desig" type="textbox" v-model="user.designation" disabled></label></td>
+                </tr>
+                <tr>
+                  <td>Campus</td><td><input class="form-control" name="campus" type="textbox" v-model="user.campus" disabled></label></td>
+                </tr>
+                <tr>
+                  <td>Email</td><td><input class="form-control" name="email" type="textbox" v-model="user.email" disabled></label></td>
+                </tr>
+                
+              </table>
+             
+            </div>
+           
+          </div>
+        </div>
+
+      </div>
+
+  </div>
+</body>
+</html>
+
+<script>
+   var vm= new Vue({
+       el: "#app",
+       
+       data:{
+         user:{username:"Abc Xyz",designation:"Professor",campus:"Goa Campus",email:"abc@goa.bits-pilani.ac.in"},
+         modal_student:{},
+         showApproved:false,
+         data_pending:[{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'}],
+         student_pending_attributes:[{'display':'Student Name','prop':'name'},{'display':'CGPA','prop':'cgpa'},{'display':'Thesis Location','prop':'thesis_locale'},{'display':'Thesis Subject','prop':'thesis_subject'},{'display':'Organisation','prop':'name_of_org'},{'display':'Expected Deliverables','prop':'expected_deliverables'}]
+        }
+
+   })
+</script>
