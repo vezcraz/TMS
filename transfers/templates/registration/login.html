@@ -1,1 +1,49 @@
-<p>Hello World!</p>
+{% extends 'registration/base.html' %}
+{% load static %}
+{% block header %}
+
+<!-- <div class="batch" style="text-align:center; color: #2962FF; position: relative;">
+  <p><br>Batch-{{ form.current_batch }}</p>
+</div> -->
+{% endblock %}
+{% block form_render %}
+<div class="site-section">
+  <div class="container">
+  <img src="{% static 'transfers/images/logo.gif' %}" class="image">
+    <!-- <h1> a </h1> -->
+    {% if form.errors %}
+    <div class="header">
+      <h1 style="color: #2962FF ; font-size: 28px; "><div style="font-size: 20px; font-weight: normal; padding-bottom: 125px; padding-top: 100px;"></div>PS TS Transfer <br> Management System</h1>
+     </div>
+      <p style="color:red ; font-size: 13px;" >Your username and password didn't match. Please try again.</p>
+      <br>
+      <form method="post" action =".">
+        {% csrf_token %}
+
+        <p>Username</p>
+        <input type="text" name="username" value="" placeholder="Enter Username" required/>
+        <p>Password</p>
+        <input type="password" name="password" placeholder="Enter Password" required/>
+        <div class="button"><button type="submit" style="font-size: 16px;">Login</button></div>
+        <div class="forgotPass"><a href={% url 'password_reset' %}>Forgot Password</a></div>
+    </form>
+    
+      {% else %}
+      <div class="header">
+      <h1 style="color: #2962FF ; font-size: 28px; "><div style="font-size: 20px; font-weight: normal; padding-bottom: 150px; padding-top: 50px;"></div>PS TS Transfer <br> Management System</h1>
+     </div>
+
+    <form method="post" action =".">
+        {% csrf_token %}
+
+        <p>Username</p>
+        <input type="text" name="username" value="" placeholder="2016XXPSXXXXG" required/>
+        <p>Password</p>
+        <input type="password" name="password" placeholder="Enter Password" required/>
+        <div class="button"><button type="submit" style="font-size: 16px;">Login</button></div>
+        <div class="forgotPass"><a href={% url 'password_reset' %}>Forgot Password</a></div>
+    </form>
+</div>
+</div>
+    {% endif %}
+{% endblock %}

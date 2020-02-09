@@ -1,0 +1,317 @@
+{% extends 'transfers/website_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+<div class="row" id="mainContent">
+    
+    <!--
+		Not applied
+    -->
+    <div class="table-light shadow site-section col-md-12 text-center" id="notApplied">	   
+
+        <br>    
+        <h1 class="text-dark"> Transfer Management System </h1>
+        
+        <div class="btn-group btn p-1 mt-5" id="typeOfPage">
+            <br>
+            <input class="btn btn-primary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="PStoTStransfer" value="PS to TS Transfer" onclick="changeDisplayDiv(1)">            
+            <input class="btn btn-secondary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="TStoPStransfer" value="TS to PS Transfer" onclick="changeDisplayDiv(2)">
+            <br>
+        </div>
+
+        <p class="text-dark"> There are two types of Transfers: </p>
+        <h3 class="text-dark"> 1) PS to TS </h3>        
+        <h3 class="text-dark"> 2) TS to PS </h3>  
+        <br>      
+        <p class="text-danger"> <b>Note</b>: Each type of Form can be filled a maximum of 2 times. After 3 attempts,<br> no further requests will be considered. Kindly fill the forms judiciously. </p>
+
+        <br>
+        <h1 class="text-dark"> Deadline </h1>
+        <p class="text-dark"> Deadline for each attempt is as follows: </p>
+        <p class="text-dark"> <b>Attempt 1:</b> {{deadlines.0}} </p>
+        <p class="text-dark"> <b>Attempt 2:</b> {{deadlines.1}} </p>    
+        
+    </div>   
+
+    <!--
+		Apply
+    -->
+    <div class="container">
+    <div class="row text-center text-dark form-container-row">
+    <div class="col-md-8 shadow mb-5 table-light rounded box text-center" style="margin: 20px auto;" id="applyPS2TS">
+        <div class="row form-row">
+            <div class="col">
+                <br><br><br>
+                <h3>PS2TS Form</h3>
+                <form action="/ps2ts/" method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input class="btn btn-dark" type="submit" value="Submit">               
+
+                </form>
+                <br>
+            </div>
+            <a onclick="home()">back</a>
+        </div>
+    </div> 
+	</div>
+	</div>
+
+	<div class="container">
+    <div class="row text-center text-dark form-container-row">	
+    <div class="col-md-8 shadow mb-5 table-light rounded box text-center" style="margin: 20px auto;" id="applyTS2PS">
+        <div class="row form-row">
+            <div class="col">
+                <br><br><br>
+                <h3>TS2PS Form</h3>
+                <form action="/ts2ps/" method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input class="btn btn-dark" type="submit" value="Submit">               
+
+                </form>
+                <br>
+            </div>
+            <a onclick="home()">back</a>
+        </div>
+    </div>
+	</div>
+	</div>
+    
+
+    <!--
+		Applied
+    -->
+
+    <div class="table-light site-section col-md-12 mt-5 text-center" id="applied">
+    	<h2 class="text-dark"> Transfer Request </h2>
+        <h4 class="text-dark col-md-7">Status of Application : </h4>	    
+        <div class="col-md-12">
+        	<button id="appliedL1" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="L1">Default</button>   
+        	<button id="appliedL2" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="L2">Default</button>
+        	<button id="appliedL3" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="L3">Default</button>
+        </div>
+        <form class="signup-form1 shadow col-md-12 p-3 mb-5 table-light rounded text-center" id="appliedForm" action="" method="post" readonly> 
+            {% csrf_token %}                
+                <br/>                
+                <div class="form-group row" id="appliedReply">
+                    <label class="col-sm-3 col-form-label">Comments by authorities</label>
+                    <div class="col-sm-7">
+                        <textarea class="form-control" id="appliedReply" rows="4" cols="20" readonly></textarea>
+                    </div>
+                </div>                
+        </form>
+        
+        
+        <script type="text/javascript">
+        	var status = [1,2,3];        	
+        	function getStatusToWords(status_value)
+	        {
+	            if(status_value == 0)
+	            {
+	                return "Not Sent";
+	            }
+	            else if(status_value == 1)
+	            {
+	                return "In Progress";   
+	            }
+	            else if(status_value == 2)
+	            {
+	                return "Rejected";   
+	            }
+	            else if(status_value == 3)
+	            {
+	            	return "Approved";
+	            }
+	        }
+
+	        function getStatus(status_value)
+	        {
+	            if(status_value == 0) //Default
+	            {
+	                return "btn btn-secondary btn-arrow-right";
+	            }
+	            else if(status_value == 1) //In process
+	            {
+	                return "btn btn-warning btn-arrow-right";   
+	            }
+	            else if(status_value == 2) //Rejected
+	            {
+	                return "btn btn-danger btn-arrow-right";   
+	            }
+	            else if(status_value == 3) //Approved
+	            {	
+	            	return "btn btn-success btn-arrow-right";
+	            }
+	        }                      	
+			for (var i = 1; i <= 3; i++) 
+			{
+				var name = "appliedL" + i.toString();	
+				console.log(status[2*i-2]);			
+				document.getElementById(name).className = getStatus(status[2*i-2]);
+				document.getElementById(name).textContent = getStatusToWords(status[2*i-2]);          		
+			} 
+			
+    	</script>
+    </div>
+
+        
+    <!--
+	 	Edit Applied
+	-->
+    <div class="table-light site-section col-md-12 mt-5 text-center" id="editApplied">
+    	<h2 class="text-dark"> Edited Transfer Request </h2>
+        <h4 class="text-dark col-md-7">Status of Application : </h4>
+	    
+        <div class="col-md-12">
+        	<button id="editAppliedL1" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="L1">Default</button>   
+        	<button id="editAppliedL2" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="L2">Default</button>
+        	<button id="editAppliedL3" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="L3">Default</button>
+        </div>
+        <form class="signup-form1 shadow col-md-12 p-3 mb-5 table-light rounded text-center" id="appliedForm" action="" method="post" readonly> 
+            {% csrf_token %}                
+                <br/>                
+                <div class="form-group row" id="editAppliedReply">
+                    <label class="col-sm-3 col-form-label">Comments by authorities</label>
+                    <div class="col-sm-7">
+                        <textarea class="form-control" id="editAppliedReply" rows="4" cols="20" readonly></textarea>
+                    </div>
+                </div>
+        </form>       
+        <div class="col-md-12">
+            <p class="text-danger text-center"> No more editing allowed </p>
+        </div>       
+        
+    </div>
+
+</div>	
+
+	<script type="text/javascript">
+	    var CURRENT_VIEW = 2;
+	    if (CURRENT_VIEW==2) //Not applied
+		{	
+			document.getElementById("notApplied").style.display = "";
+            document.getElementById("applied").style.display = "none";
+            document.getElementById("editApplied").style.display = "none";
+            document.getElementById("applyPS2TS").style.display = "none";
+    		document.getElementById("applyTS2PS").style.display = "none";		
+		    function changeDisplayDiv(typeOfForm)
+	    	{	        
+	            document.getElementById("notApplied").style.display = "none";
+	            document.getElementById("applied").style.display = "none";
+	            document.getElementById("editApplied").style.display = "none";
+	            if (typeOfForm==1) 
+	            {
+            		document.getElementById("applyPS2TS").style.display = "";
+            		document.getElementById("applyTS2PS").style.display = "none";
+	            }
+	            else if (typeOfForm==2)
+	            {
+	            	document.getElementById("applyPS2TS").style.display = "none";
+            		document.getElementById("applyTS2PS").style.display = "";
+	            }
+	        }
+	        function home()
+	        {
+	        	document.getElementById("notApplied").style.display = "";
+				document.getElementById("applied").style.display = "none";
+		    	document.getElementById("editApplied").style.display = "none";
+		    	document.getElementById("applyPS2TS").style.display = "none";
+    			document.getElementById("applyTS2PS").style.display = "none";	
+	        }
+
+	    }
+	    else if (CURRENT_VIEW==1) //Applied
+		{
+			document.getElementById("notApplied").style.display = "none";
+			document.getElementById("applied").style.display = "";
+		    document.getElementById("editApplied").style.display = "none";
+		    document.getElementById("applyPS2TS").style.display = "none";
+    		document.getElementById("applyTS2PS").style.display = "none";		    
+	    }
+	    else if (CURRENT_VIEW==0) //Edit Applied
+		{
+			document.getElementById("notApplied").style.display = "none";
+			document.getElementById("applied").style.display = "none";
+		    document.getElementById("editApplied").style.display = "";
+		    document.getElementById("applyPS2TS").style.display = "none";
+    		document.getElementById("applyTS2PS").style.display = "none";
+		    document.getElementById("noMoreInformativeApplications").style.display = "none";		    
+	    }
+	</script>	   
+	 
+
+	<style>    
+	    .signup-form1 
+	    {
+	    	width: 100%;
+	    	min-width: 450px;
+	    	color: black;
+		}	
+		.btn-arrow-right,
+		.btn-arrow-left {
+		    position: relative;
+		    padding-left: 18px;
+		    padding-right: 18px;
+		}
+		.btn-arrow-right {
+		    padding-left: 36px;
+		}
+		.btn-arrow-left {
+		    padding-right: 36px;
+		}
+		.btn-arrow-right:before,
+		.btn-arrow-right:after,
+		.btn-arrow-left:before,
+		.btn-arrow-left:after { /* make two squares (before and after), looking similar to the button */
+		    content:"";
+		    position: absolute;
+		    top: 5px; /* move it down because of rounded corners */
+		    width: 22px; /* same as height */
+		    height: 22px; /* button_outer_height / sqrt(2) */
+		    background: inherit; /* use parent background */
+		    border: inherit; /* use parent border */
+		    border-left-color: transparent; /* hide left border */
+		    border-bottom-color: transparent; /* hide bottom border */
+		    border-radius: 0px 4px 0px 0px; /* round arrow corner, the shorthand property doesn't accept "inherit" so it is set to 4px */
+		    -webkit-border-radius: 0px 4px 0px 0px;
+		    -moz-border-radius: 0px 4px 0px 0px;
+		}
+		.btn-arrow-right:before,
+		.btn-arrow-right:after {
+		    transform: rotate(45deg); /* rotate right arrow squares 45 deg to point right */
+		    -webkit-transform: rotate(45deg);
+		    -moz-transform: rotate(45deg);
+		    -o-transform: rotate(45deg);
+		    -ms-transform: rotate(45deg);
+		}
+		.btn-arrow-left:before,
+		.btn-arrow-left:after {
+		    transform: rotate(225deg); /* rotate left arrow squares 225 deg to point left */
+		    -webkit-transform: rotate(225deg);
+		    -moz-transform: rotate(225deg);
+		    -o-transform: rotate(225deg);
+		    -ms-transform: rotate(225deg);
+		}
+		.btn-arrow-right:before,
+		.btn-arrow-left:before { /* align the "before" square to the left */
+		    left: -11px;
+		}
+		.btn-arrow-right:after,
+		.btn-arrow-left:after { /* align the "after" square to the right */
+		    right: -11px;
+		}
+		.btn-arrow-right:after,
+		.btn-arrow-left:before { /* bring arrow pointers to front */
+		    z-index: 1;
+		}
+		.btn-arrow-right:before,
+		.btn-arrow-left:after { /* hide arrow tails background */
+		    background-color: white;
+		}
+	</style>
+
+{% endblock %}
