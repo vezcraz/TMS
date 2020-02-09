@@ -1,1 +1,1 @@
-from .redirect_views import login_redirect_view
+from .redirect_views import * # NOQA
