@@ -1,0 +1,20 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html body {
+    background-color: rgb(212, 246, 255);
+}
+
+.form-container-row{
+    margin: 10px;
+}
+
+.form-row{
+    margin: 30px;
+}
+
+.control-group {
+    padding: 10px;
+}
