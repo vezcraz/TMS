@@ -1,8 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_protect
-from django.views import View, generic
-from django.contrib import messages
+from django.views import generic
 
 from transfers.models import PS2TSTransfer
 
@@ -11,24 +8,10 @@ from transfers.forms import PS2TSTransferForm, TS2PSTransferForm
 
 
 class StudentDashboardView(generic.TemplateView):
+    template_name = 'transfers/student_dashboard.html'
+
     def get(self, request, *args, **kwargs):
-        current_user = request.user
-        full_name = current_user.get_full_name()
-        current_user_profile = current_user.userprofile
-        approved_applications = PS2TSTransfer.objects.filter(
-            applicant=current_user_profile, is_supervisor_approved=True)
-        pending_applications = PS2TSTransfer.objects.filter(
-            applicant=current_user_profile, is_supervisor_approved=False)
-
-        if approved_applications.count() == 0:
-            messages.info(request, 'You have no approved applications')
-        if pending_applications .count() == 0:
-            messages.info(request, 'You have no pending applications')
-
-        return render(request, 'transfers/student_dashboard.html', {
-            'full_name': full_name,
-            'approved_applications': approved_applications,
-            'pending_applications': pending_applications})
+        return render(request, self.template_name)
 
 
 class PS2TSFormView(generic.FormView):

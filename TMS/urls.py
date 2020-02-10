@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('TMS-admin/', admin.site.urls),
     path('TMS/', include('transfers.urls')),
     path('TMS/', include('django.contrib.auth.urls')),
+    path('TMS-admin/', admin.site.urls),
 ]
 

@@ -1,4 +1,5 @@
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.9">
@@ -19,16 +20,22 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script> -->
 
+    <!-- AXIOS CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
     <!-- Custom CSS/ Js -->
     <!-- <script src="js/custom.js"></script> -->
-    <link rel="stylesheet" href="custom.css"/>
+    <link rel="stylesheet" href="{% static 'transfers/css/custom.css' %}"/>
 
 
 </head>
+
+<script>
+
+</script>
 <body class="bg-light">
   <div id="app" class="border">
       <nav class="m-0 p-0 navbar navbar-expand-lg">
-          <a class="navbar-brand" href="#"> <img src="assets/bp-logo.gif" alt=""></a>
+          <a class="navbar-brand" href="#"> <img src="{% static 'transfers/images/bp-logo.gif' %}" alt=""></a>
         
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -37,11 +44,11 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto mr-2">
               <li class="nav-item">
-                <img src="assets/profile-img.png" class="img " style="display:inline; height:70px; width:75px;" alt="dsad"> 
+                <img src="{% static 'transfers/images/profile-img.png' %}" class="img " style="display:inline; height:70px; width:75px;" alt="Profile Image"> 
               </li>
 
               <li class="nav-item my-auto ml-auto px-3">
-                <span style="line-height: .4; font-size: large;" class="" >    Welcome {{user.username}} !</span> 
+                <span style="line-height: .4; font-size: large;" class="" >    Welcome ${user.username} !</span> 
                <br> <a class="" href="#" data-toggle="modal" data-target="#userProfileModal" >View Profile</a>
               </li>
              
@@ -68,8 +75,9 @@
           <div @click="modal_student=student" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
               <table  id="student-details-table" class="table mt-2">
                 <tr v-for="attr in student_pending_attributes">
-                  <td class="text-left"><strong>{{attr.display}}</strong> </td>
-                  <td id="text-overflow" >{{student[attr.prop]}}</td>
+                  <td class="text-left"><strong>${attr.display}</strong> </td>
+                  <td id="text-overflow" >${student[attr.prop]}</td>
+              
                 </tr>
               </table>
           </div>
@@ -83,8 +91,8 @@
           <div @click="modal_student=student" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
               <table  id="student-details-table" class="table mt-2">
                 <tr v-for="attr in student_pending_attributes">
-                  <td class="text-left"><strong>{{attr.display}}</strong> </td>
-                  <td id="text-overflow" >{{student[attr.prop]}}</td>
+                  <td class="text-left"><strong>${attr.display}</strong> </td>
+                  <td id="text-overflow" >${student[attr.prop]}</td>
                 </tr>
               </table>
           </div>
@@ -107,8 +115,8 @@
 
               <table  id="student-details-modal-table" class="table mt-2">
                 <tr v-for="attr in student_pending_attributes">
-                  <td class="text-left"><strong>{{attr.display}}</strong> </td>
-                  <td >{{modal_student[attr.prop]}}</td>
+                  <td class="text-left"><strong>${attr.display}</strong> </td>
+                  <td >${modal_student[attr.prop]}</td>
                 </tr>
               </table>
              
@@ -160,8 +168,8 @@
 
 <script>
    var vm= new Vue({
+       delimiters : ['${', '}'],
        el: "#app",
-       
        data:{
          user:{username:"Abc Xyz",designation:"Professor",campus:"Goa Campus",email:"abc@goa.bits-pilani.ac.in"},
          modal_student:{},

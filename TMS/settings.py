@@ -127,3 +127,4 @@ STATIC_URL = '/static/'
 
 # For redirects
 LOGIN_REDIRECT_URL = '/TMS/login-redirect/'
+LOGOUT_REDIRECT_URL = '/TMS/login-redirect/'
