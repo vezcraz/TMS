@@ -16,7 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-
 urlpatterns = [
     path('TMS-admin/', admin.site.urls),
     path('TMS/', include('transfers.urls')),

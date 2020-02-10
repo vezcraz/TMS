@@ -1,20 +1,23 @@
-{% extends "transfers/base.html" %}
+{% extends "transfers/website_base.html" %}
 
 {% load crispy_forms_tags %}
 
 {% block content %}
 
 <div class="container">
-    <div class="row text-center form-container-row">
-        <div class="col-md-8 shadow mb-5 table-light rounded box" style="margin: 20px auto;">
+    <div class="row text-center text-dark form-container-row">
+        <div class="col-md-8 shadow mb-5 table-light rounded box text-center text-dark form-container-row" style="margin: 20px auto;">
             <div class="row form-row">
                 <div class="col">
+                    <br><br><br>
                     <h3>PS2TS Form</h3>
                     <form action="/ps2ts/" method="post">
                         {% csrf_token %}
                         {{ form|crispy }}
-                        <input class="btn btn-dark" type="submit" value="Submit">
+                        <input class="btn btn-dark" type="submit" value="Submit">                        
+
                     </form>
+                    <br>
                 </div>
             </div>
         </div>

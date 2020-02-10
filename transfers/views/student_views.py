@@ -25,18 +25,10 @@ class StudentDashboardView(generic.TemplateView):
         if pending_applications .count() == 0:
             messages.info(request, 'You have no pending applications')
 
-        return render(request, 'transfers/student_landing.html', {
+        return render(request, 'transfers/student_dashboard.html', {
             'full_name': full_name,
             'approved_applications': approved_applications,
             'pending_applications': pending_applications})
-
-    def post(self, request, *args, **kwargs):
-        if 'ts2ps' in request.POST:
-            print("thesis to practice school")
-        elif 'ps2ts' in request.POST:
-            print("practice school to thesis")
-
-        # will raise error because of missing return statement
 
 
 class PS2TSFormView(generic.FormView):

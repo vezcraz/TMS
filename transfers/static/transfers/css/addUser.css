@@ -1,0 +1,12 @@
+.signup-form {
+    width: 30%;
+    min-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    padding: 20px;
+}
+
+label {
+    text-align: right;
+}

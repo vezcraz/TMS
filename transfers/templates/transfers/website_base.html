@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <title>TMS</title>
+  <link rel="shortcut icon" href="{% static 'transfers/images/favicon' %}" >
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="{% static 'transfers/css/styleForm.css' %}">
+  <link href="https://fonts.googleapis.com/css?family=Muli:300,400,700,900" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'transfers/fonts/icomoon/style.css' %}">
+
+<!-- BOOTSTRAP STARTS-->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+   <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <!-- BOOTSTRAP ENDS-->
+
+  
+
+ 
+  
+
+  <link rel="stylesheet" href="{% static 'transfers/css/style.css' %}">
+  
+  <link rel="stylesheet" href="{% static 'transfers/css/addUser.css' %}">
+
+ <!--  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
+
+
+  
+
+</head>
+
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+
+  <div class="site-wrap">
+
+    <div class="site-mobile-menu site-navbar-target">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+          <span class="icon-close2 js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
+
+
+    <div class="py-2" style="background: #266793">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-9 d-lg-block">          
+            <a  class="small mr-3" style="color: white" ><span class="icon-question-circle-o mr-2" ></span> Having troubles ?</a>             
+            <a href="mailto:developers.psd@gmail.com" class="small mr-3" style="color: #191919" data-toggle="tooltip" data-placement="top" title="Please note, no query regarding application will be entertained on this email, only queries related to working of website will be entertained on this email. While submitting any query please clearly mention your name, roll number and email in the query." ><span class="icon-envelope-o mr-2"></span> developers.psd@gmail.com</a> 
+          </div>
+          
+          <div class="col-lg-3 text-right">           
+            
+            <a href="#" style="color: white">Welcome, {{user}}</a>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <header class="site-navbar py-3 js-sticky-header site-navbar-target border-bottom border-medium" role="banner" style="background: #E3E3E3">
+
+      <div class="container">
+        <div class="d-flex align-items-center">
+          <div class="site-logo mr-auto pr-2">
+            <a href="/transfers/redirect" class="d-block">
+              <img src="{% static 'transfers/images/logo.png' %}" alt="Image" class="img-fluid">
+            </a>
+          </div>
+          <div class="mr-auto ml-auto justify-content-center">
+            <nav class="px-3 site-navigation position-relative text-right" role="navigation">
+              <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">               
+                <li>
+                  <a href="/transfers/redirect/" class="small btn btn-warning px-2 py-2 rounded-1 ml-1 m-1" style="color: black; font-size: 18px;"><span class="icon-reply mr-2"></span> Back</a> 
+                </li>
+                <li class="active">
+                  <a href="/transfers/redirect/" class="small btn btn-primary px-2 py-2 rounded-1 ml-1 m-1" style="color: white; font-size: 18px;"><span class="icon-home" ></span> Home</a>
+                </li>               
+                  <li>
+                    <a href="/password_change" class="small btn btn-secondary px-2 py-2 rounded-1 ml-1 m-1"style="color: white; font-size: 18px;" data-toggle="tooltip" data-placement="top" title="Change your Password"><span class="icon-key" ></span> Change Password</a>
+                  </li> 
+              </ul>                  
+            </nav>
+          </div>
+          <div class="ml-auto">            
+            <div class="social-wrap">  
+              <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block mt-3">
+              <li>
+                <a href="/transfers/logout/" class="small btn btn-danger px-2 py-2 rounded-1 ml-1 m-1" style="color: white; font-size: 18px;"><span class="icon-lock"></span> Log Out</a>
+              </li>
+              </ul>
+              <a href="#" class="d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black" id="navbut"><span
+                class="icon-menu h3"></span></a>
+            </div>
+          </div>         
+        </div>
+      </div>
+      <br>
+      <div class="site-navbar py-3  site-navbar-target border border-dark" role="banner" style="background: #B8D0E1">
+        <center>
+          <div style="font-size: 22px; color: red;" id="website_base_deadline"> <b>
+            <!-- <p type="abc" name="website_base_deadline" id="website_base_deadline"> </p> -->
+          </div>
+      </div>
+    </header>  
+  </div>
+<br><br><br><br>
+    <body>
+
+    {% block header %}     
+    {% endblock %}
+    {% block content %}
+    {% endblock %}
+    {% block form_render %}
+    {% endblock %}
+    {% block footer %}
+    {% endblock %}
+
+  <div>
+      <center><p style="font-size: 12px">Copyright © 2019. All Rights Reserved. <a href="/transfers/dev_page">Meet the Creators.</a></p>      
+  </div>
+
+
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.1.0/jquery-migrate.min.js"></script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar.js/0.6.2/jquery.stellar.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.sticky/1.0.4/jquery.sticky.min.js"></script>
+
+  <script src="{% static 'transfers/js/main.js' %}"></script>
+
+</body>
+
+<style type="text/css">
+  
+  @media (min-width: 992px) {
+    .container{
+        max-width: 1400px;
+    }
+  }
+</style>
+
+<!-- <script type="text/javascript">
+
+  
+  $.ajax({
+    url: '/PS2/get-deadline',
+    type:'GET',
+    success: function(response)
+    {
+      var deadlineAttempt = response['deadlineAttempt'];
+      var deadline = response['deadline'];
+      var value = "";
+
+      if( deadlineAttempt == 1 ){
+        value = "Last date of submission : " + deadline;
+      }
+      else if ( deadlineAttempt == 2 ){
+        value = "Last date of Re-Application 1 : " + deadline;
+      }
+      else if (deadlineAttempt == 3 ){
+        value = "Last date of Re-Application 2 : " + deadline; 
+      }
+      else if (deadlineAttempt == 0 ){
+        value = "Deadline passed, no more applications being accepted.";
+      }
+      document.getElementById("website_base_deadline").innerHTML = value;
+    }
+  });
+  
+ </script> -->
+
+</html>
+
