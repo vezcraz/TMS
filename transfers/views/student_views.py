@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
+from django.http import JsonResponse
 
 from transfers.models import PS2TSTransfer
 
@@ -21,7 +22,8 @@ class PS2TSFormView(generic.FormView):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form': form})
+        hod_email_list = ["a@gmail.com","b@gmail.com","c@gmail.com"]
+        return render(request, self.template_name, {'form': form, 'hod_email_list': hod_email_list})
 
 class TS2PSFormView(generic.FormView):
     form_class = TS2PSTransferForm
@@ -30,4 +32,17 @@ class TS2PSFormView(generic.FormView):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form': form})
+        hod_email_list = ["a@gmail.com","b@gmail.com","c@gmail.com"]
+        return render(request, self.template_name, {'form': form, 'hod_email_list': hod_email_list})
+
+def validate_supervisor_email(request):
+    email = request.GET.get('email', None)
+    is_valid = True
+    name = "Dr. FullName"
+    department = "DepartmentName"
+    data = {
+        'is_valid': is_valid,
+        'name': name,
+        'department': department
+    }
+    return JsonResponse(data)

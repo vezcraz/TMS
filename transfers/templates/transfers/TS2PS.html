@@ -1,19 +1,39 @@
-{% extends "transfers/base.html" %}
+{% extends "transfers/website_base.html" %}
 
 {% load crispy_forms_tags %}
 
 {% block content %}
 
 <div class="container">
-    <div class="row text-center form-container-row">
-        <div class="col-md-8 shadow mb-5 table-light rounded box" style="margin: 20px auto;">
+    <div class="row form-container-row">
+        <div class="col-md-8 shadow table-light rounded box" style="margin: 100px auto 20px auto; padding: 50px 0;">
+            <h2 class="text-center">TS2PS Form</h2>
             <div class="row form-row">
-                <div class="col">
-                    <h3>TS2PS Form</h3>
+                <div class="col" style="margin: 0 auto; max-width: 500px;">
                     <form action="/ts2ps/" method="post">
                         {% csrf_token %}
-                        {{ form|crispy }}
-                        <input class="btn btn-dark" type="submit" value="Submit">
+                        {{ form.applicant|as_crispy_field }}
+                        <div id="div_id_hod_email" class="control-group">
+                            <label for="id_hod_email" class="control-label requiredField">
+                                HOD Email<span class="asteriskField">*</span>
+                            </label>
+                            <div class="controls">
+                                <select name="hod_email" class="select" required="" id="id_hod_email">
+                                    <option value="" selected="">---------</option>
+                                    {% for i in hod_email_list %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {{ form.sub_type|as_crispy_field }}
+                        {{ form.cgpa|as_crispy_field }}
+                        {{ form.reason_for_transfer|as_crispy_field }}
+                        {{ form.name_of_org|as_crispy_field }}
+                        {{ form.is_hod_approved|as_crispy_field }}
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-dark">Submit</button>
+                        </div>
                     </form>
                 </div>
             </div>
