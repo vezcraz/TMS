@@ -45,7 +45,7 @@ class PS2TSFormView(generic.FormView):
         if form.is_valid():
             email = form.cleaned_data.get('supervisor_email')
             supervisor_email_qs = UserProfile.objects.filter(
-                user_type=UserType.SUPERVISOR.value, user__email__contains=email)
+                user_type=UserType.SUPERVISOR.value, user__email=email)
             if supervisor_email_qs:
                 form.save()
                 return render(request, "transfers/student_dashboard.html")
