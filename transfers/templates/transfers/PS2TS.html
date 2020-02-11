@@ -7,10 +7,10 @@
 <div class="container">
     <div class="row form-container-row">
         <div class="col-md-8 shadow table-light rounded box" style="margin: 100px auto 20px auto; padding: 50px 0;">
-            <h2 class="text-center">PS2TS Form</h2>
+            <h2 class="text-center">Practice School to Thesis Form</h2>
             <div class="row form-row">
                 <div class="col" style="margin: 0 auto; max-width: 500px;">
-                    <form action="/ps2ts/" method="post">
+                    <form action="" method="post">
                         {% csrf_token %}
                         {{ form.applicant|as_crispy_field }}
                         {{ form.supervisor_email|as_crispy_field }}
@@ -29,10 +29,10 @@
                                         <p id="supervisor-name"></p>
                                     </div>
                                     <div class="col-3 mb-0 verification-col">
-                                        <p>Department:</p>
+                                        <p>Campus:</p>
                                     </div>
                                     <div class="col-9 mb-0 verification-col">
-                                        <p id="supervisor-department"></p>
+                                        <p id="supervisor-campus"></p>
                                     </div>
                                 </div>
                             </div>
@@ -56,8 +56,6 @@
                         {{ form.thesis_subject|as_crispy_field }}
                         {{ form.name_of_org|as_crispy_field }}
                         {{ form.expected_deliverables|as_crispy_field }}
-                        {{ form.is_supervisor_approved|as_crispy_field }}
-                        {{ form.is_hod_approved|as_crispy_field }}
                         <div class="text-center">
                             <button type="submit" class="btn btn-dark">Submit</button>
                         </div>
@@ -70,6 +68,9 @@
 </div>
 
 <script>
+    if('{{ invalid_supervisor_email }}' == 'True'){
+        $("#verification-info").html("Invalid Supervisor Email!");
+    }
     $("#id_supervisor_email").change(function () {
         var email = $(this).val();
         $.ajax({
@@ -82,12 +83,12 @@
                 if (data.is_valid) {
                     console.log(true);
                     $("#supervisor-name").html(data.name);
-                    $("#supervisor-department").html(data.department);
-                    $("#supervisor-info").html("");
+                    $("#supervisor-campus").html(data.campus);
+                    $("#verification-info").html("");
                 } else {
                     $("#verification-info").html("Invalid Supervisor Email!");
                     $("#supervisor-name").html("");
-                    $("#supervisor-department").html("");
+                    $("#supervisor-campus").html("");
                 }
             }
         });

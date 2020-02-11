@@ -34,6 +34,8 @@ class UserProfile(models.Model):
     user_type = models.IntegerField(choices=user_choices, blank=True,
         null=True)
 
+    def __str__(self):
+        return self.user.get_full_name()
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
@@ -85,6 +87,9 @@ class PS2TSTransfer(models.Model):
     is_supervisor_approved = models.BooleanField(default=False)
     is_hod_approved = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name = 'PS to TS Application'
+        verbose_name_plural = 'PS to TS Applications'
 
 class TS2PSTransfer(models.Model):
     """
@@ -113,3 +118,7 @@ class TS2PSTransfer(models.Model):
             help_text='Name of BITS Campus or Organization where thesis was being carried')
     # field to note the status of the application
     is_hod_approved = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'TS to PS Application'
+        verbose_name_plural = 'TS to PS Applications'
