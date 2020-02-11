@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls import url
 
 from transfers.views import (redirect_views, student_views,
     hod_views, supervisor_views)
@@ -11,4 +12,5 @@ urlpatterns = [
     path('student/dashboard/', student_views.StudentDashboardView.as_view()),
     path('hod/home/', hod_views.HODHomeView.as_view()),
     path('supervisor/home/', supervisor_views.SupervisorHomeView.as_view()),
+    url(r'^validate_supervisor_email/$', student_views.validate_supervisor_email, name='validate_supervisor_email'),
 ]

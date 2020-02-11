@@ -5,17 +5,62 @@
 {% block content %}
 
 <div class="container">
-    <div class="row text-center text-dark form-container-row">
-        <div class="col-md-8 shadow mb-5 table-light rounded box text-center text-dark form-container-row" style="margin: 20px auto;">
+    <div class="row form-container-row">
+        <div class="col-md-8 shadow table-light rounded box" style="margin: 100px auto 20px auto; padding: 50px 0;">
+            <h2 class="text-center">PS2TS Form</h2>
             <div class="row form-row">
-                <div class="col">
-                    <br><br><br>
-                    <h3>PS2TS Form</h3>
+                <div class="col" style="margin: 0 auto; max-width: 500px;">
                     <form action="/ps2ts/" method="post">
                         {% csrf_token %}
-                        {{ form|crispy }}
-                        <input class="btn btn-dark" type="submit" value="Submit">                        
-
+                        {{ form.applicant|as_crispy_field }}
+                        {{ form.supervisor_email|as_crispy_field }}
+                        <div class="row control-group" style="padding: 0 30px 15px 30px;">
+                            <div class="col-12">
+                                <div class="row text-center">
+                                    <p style="margin: 0;">Supervisor details: <spanid id="verification-info" style="color: red;"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="row verification-row">
+                                    <div class="col-3 mb-0 verification-col">
+                                        <p>Name:</p>
+                                    </div>
+                                    <div class="col-9 mb-0 verification-col">
+                                        <p id="supervisor-name"></p>
+                                    </div>
+                                    <div class="col-3 mb-0 verification-col">
+                                        <p>Department:</p>
+                                    </div>
+                                    <div class="col-9 mb-0 verification-col">
+                                        <p id="supervisor-department"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="div_id_hod_email" class="control-group">
+                            <label for="id_hod_email" class="control-label requiredField">
+                                HOD Email<span class="asteriskField">*</span>
+                            </label>
+                            <div class="controls">
+                                <select name="hod_email" class="select" required="" id="id_hod_email">
+                                    <option value="" selected="">---------</option>
+                                    {% for i in hod_email_list %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {{ form.sub_type|as_crispy_field }}
+                        {{ form.cgpa|as_crispy_field }}
+                        {{ form.thesis_locale|as_crispy_field }}
+                        {{ form.thesis_subject|as_crispy_field }}
+                        {{ form.name_of_org|as_crispy_field }}
+                        {{ form.expected_deliverables|as_crispy_field }}
+                        {{ form.is_supervisor_approved|as_crispy_field }}
+                        {{ form.is_hod_approved|as_crispy_field }}
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-dark">Submit</button>
+                        </div>
                     </form>
                     <br>
                 </div>
@@ -23,5 +68,30 @@
         </div>
     </div>
 </div>
+
+<script>
+    $("#id_supervisor_email").change(function () {
+        var email = $(this).val();
+        $.ajax({
+            url: '/TMS/validate_supervisor_email/',
+            data: {
+                'email': email
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.is_valid) {
+                    console.log(true);
+                    $("#supervisor-name").html(data.name);
+                    $("#supervisor-department").html(data.department);
+                    $("#supervisor-info").html("");
+                } else {
+                    $("#verification-info").html("Invalid Supervisor Email!");
+                    $("#supervisor-name").html("");
+                    $("#supervisor-department").html("");
+                }
+            }
+        });
+    });
+</script>
 
 {% endblock %}

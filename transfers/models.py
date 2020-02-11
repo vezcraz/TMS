@@ -108,7 +108,7 @@ class TS2PSTransfer(models.Model):
     sub_type = models.IntegerField(choices=sub_type_choices)
     # other details required for the form
     cgpa = models.DecimalField(max_digits=6, decimal_places=2)
-    reson_for_transfer = models.TextField()
+    reason_for_transfer = models.TextField()
     name_of_org = models.CharField(max_length=100,
             help_text='Name of BITS Campus or Organization where thesis was being carried')
     # field to note the status of the application
