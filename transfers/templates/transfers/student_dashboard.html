@@ -17,8 +17,8 @@
         
         <div class="btn-group btn p-1 mt-5" id="typeOfPage">
             <br>
-            <input class="btn btn-primary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="PStoTStransfer" value="PS to TS Transfer" onclick="changeDisplayDiv(1)">            
-            <input class="btn btn-secondary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="TStoPStransfer" value="TS to PS Transfer" onclick="changeDisplayDiv(2)">
+            <input class="btn btn-primary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="PStoTStransfer" value="PS to TS Transfer" onclick="location.href='/TMS/student/PS2TS';">            
+            <input class="btn btn-secondary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="TStoPStransfer" value="TS to PS Transfer" onclick="location.href='/TMS/student/TS2PS';">
             <br>
         </div>
 
@@ -102,12 +102,20 @@
                     <div class="col-sm-7">
                         <textarea class="form-control" id="appliedReply" rows="4" cols="20" readonly></textarea>
                     </div>
-                </div>                
+                </div> 
+
+                <!-- Edit when Rejected -->
+                <input class="btn btn-secondary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="editForm" value="Edit Form" onclick="location.href='/TMS/student/PS2TS';">
         </form>
         
         
         <script type="text/javascript">
-        	var status = [1,2,3];        	
+        	var status = [3,3,2];   
+        	var edit = 0;
+        	function checkStatus() 
+        	{
+        	 	return edit;         	
+     	  	}         	  	
         	function getStatusToWords(status_value)
 	        {
 	            if(status_value == 0)
@@ -119,8 +127,9 @@
 	                return "In Progress";   
 	            }
 	            else if(status_value == 2)
-	            {
-	                return "Rejected";   
+	            {	                
+	                edit=1;
+	                return "Rejected";	
 	            }
 	            else if(status_value == 3)
 	            {
@@ -179,11 +188,11 @@
                     <div class="col-sm-7">
                         <textarea class="form-control" id="editAppliedReply" rows="4" cols="20" readonly></textarea>
                     </div>
-                </div>
-        </form>       
-        <div class="col-md-12">
-            <p class="text-danger text-center"> No more editing allowed </p>
-        </div>       
+                </div>       
+        		<div class="col-md-12">
+          	  		<p class="text-danger text-center"> No more edits allowed </p>
+       		 	</div>     
+        </form>  
         
     </div>
 
@@ -191,6 +200,7 @@
 
 	<script type="text/javascript">
 	    var CURRENT_VIEW = 2;
+	    var Rejected = 0;
 	    if (CURRENT_VIEW==2) //Not applied
 		{	
 			document.getElementById("notApplied").style.display = "";
@@ -226,11 +236,16 @@
 	    }
 	    else if (CURRENT_VIEW==1) //Applied
 		{
+			Rejected = checkStatus();
 			document.getElementById("notApplied").style.display = "none";
 			document.getElementById("applied").style.display = "";
 		    document.getElementById("editApplied").style.display = "none";
 		    document.getElementById("applyPS2TS").style.display = "none";
-    		document.getElementById("applyTS2PS").style.display = "none";		    
+    		document.getElementById("applyTS2PS").style.display = "none";
+    		if (Rejected==0)
+    			document.getElementById("editForm").style.display = "none";		    
+    		else if (Rejected==1)
+    			document.getElementById("editForm").style.display = "";
 	    }
 	    else if (CURRENT_VIEW==0) //Edit Applied
 		{
