@@ -12,5 +12,6 @@ urlpatterns = [
     path('student/dashboard/', student_views.StudentDashboardView.as_view()),
     path('hod/home/', hod_views.HODHomeView.as_view()),
     path('supervisor/home/', supervisor_views.SupervisorHomeView.as_view()),
-    url(r'^validate_supervisor_email/$', student_views.validate_supervisor_email, name='validate_supervisor_email'),
+    path('validate_supervisor_email/', student_views.validate_supervisor_email),
+    path('hod/get-hod-data/', hod_views.get_hod_data),
 ]

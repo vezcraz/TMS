@@ -35,7 +35,7 @@ class UserProfile(models.Model):
         null=True)
 
     def __str__(self):
-        return self.user.get_full_name()
+        return self.user.username
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):

@@ -99,11 +99,14 @@ class TS2PSFormView(generic.FormView):
         self.context = {'form': form, 'hod_email_list': hod_email_list}
         return render(request, self.template_name, self.context)
 
+
 def validate_supervisor_email(request):
     email = request.GET.get('email', None)
     supervisor_email_list = UserProfile.objects.filter(
         user_type=UserType.SUPERVISOR.value, user__email__contains=email
     )
+    name = ''
+    campus = ''
     is_valid = False
     if supervisor_email_list:
         is_valid = True
