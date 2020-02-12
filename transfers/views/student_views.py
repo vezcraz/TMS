@@ -27,9 +27,11 @@ class PS2TSFormView(generic.FormView):
         form.fields["applicant"].queryset = UserProfile.objects.filter(user_type=0)
         hod_email_qs = UserProfile.objects.filter(
             user_type=UserType.HOD.value
+            ).filter(
+                campus = request.user.userprofile.campus
             ).values_list(
                 'user__email', flat=True
-                )
+            )
         hod_email_list = list(hod_email_qs)
         self.context = {
             'form': form,
@@ -54,9 +56,11 @@ class PS2TSFormView(generic.FormView):
         form.fields["applicant"].queryset = UserProfile.objects.filter(user_type=UserType.STUDENT.value)
         hod_email_qs = UserProfile.objects.filter(
             user_type=UserType.HOD.value
+            ).filter(
+                campus = request.user.userprofile.campus
             ).values_list(
                 'user__email', flat=True
-                )
+            )
         hod_email_list = list(hod_email_qs)
         self.context = {
             'form': form,
@@ -77,9 +81,11 @@ class TS2PSFormView(generic.FormView):
         form.fields["applicant"].queryset = UserProfile.objects.filter(user_type=0)
         hod_email_qs = UserProfile.objects.filter(
             user_type=UserType.HOD.value
+            ).filter(
+                campus = request.user.userprofile.campus
             ).values_list(
                 'user__email', flat=True
-                )
+            )
         hod_email_list = list(hod_email_qs)
         self.context = {'form': form, 'hod_email_list': hod_email_list}
         return render(request, self.template_name, self.context)
@@ -92,9 +98,11 @@ class TS2PSFormView(generic.FormView):
         form.fields["applicant"].queryset = UserProfile.objects.filter(user_type=0)
         hod_email_qs = UserProfile.objects.filter(
             user_type=UserType.HOD.value
+            ).filter(
+                campus = request.user.userprofile.campus
             ).values_list(
                 'user__email', flat=True
-                )
+            )
         hod_email_list = list(hod_email_qs)
         self.context = {'form': form, 'hod_email_list': hod_email_list}
         return render(request, self.template_name, self.context)
