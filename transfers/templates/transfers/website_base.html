@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="{% static 'transfers/fonts/icomoon/style.css' %}">
 
 <!-- BOOTSTRAP STARTS-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
    <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -72,7 +73,7 @@
       <div class="container">
         <div class="d-flex align-items-center">
           <div class="site-logo mr-auto pr-2">
-            <a href="/transfers/redirect" class="d-block">
+            <a href="/TMS/login-redirect/" class="d-block">
               <img src="{% static 'transfers/images/logo.png' %}" alt="Image" class="img-fluid">
             </a>
           </div>
@@ -80,13 +81,13 @@
             <nav class="px-3 site-navigation position-relative text-right" role="navigation">
               <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">               
                 <li>
-                  <a href="/transfers/redirect/" class="small btn btn-warning px-2 py-2 rounded-1 ml-1 m-1" style="color: black; font-size: 18px;"><span class="icon-reply mr-2"></span> Back</a> 
+                  <a href="/TMS/login-redirect/" class="small btn btn-warning px-2 py-2 rounded-1 ml-1 m-1" style="color: black; font-size: 18px;"><span class="icon-reply mr-2"></span> Back</a> 
                 </li>
                 <li class="active">
-                  <a href="/transfers/redirect/" class="small btn btn-primary px-2 py-2 rounded-1 ml-1 m-1" style="color: white; font-size: 18px;"><span class="icon-home" ></span> Home</a>
+                  <a href="/TMS/login-redirect/" class="small btn btn-primary px-2 py-2 rounded-1 ml-1 m-1" style="color: white; font-size: 18px;"><span class="icon-home" ></span> Home</a>
                 </li>               
                   <li>
-                    <a href="/password_change" class="small btn btn-secondary px-2 py-2 rounded-1 ml-1 m-1"style="color: white; font-size: 18px;" data-toggle="tooltip" data-placement="top" title="Change your Password"><span class="icon-key" ></span> Change Password</a>
+                    <a href="/TMS/password_reset/" class="small btn btn-secondary px-2 py-2 rounded-1 ml-1 m-1"style="color: white; font-size: 18px;" data-toggle="tooltip" data-placement="top" title="Change your Password"><span class="icon-key" ></span> Change Password</a>
                   </li> 
               </ul>                  
             </nav>
@@ -95,7 +96,7 @@
             <div class="social-wrap">  
               <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block mt-3">
               <li>
-                <a href="/transfers/logout/" class="small btn btn-danger px-2 py-2 rounded-1 ml-1 m-1" style="color: white; font-size: 18px;"><span class="icon-lock"></span> Log Out</a>
+                <a href="/TMS/logout/" class="small btn btn-danger px-2 py-2 rounded-1 ml-1 m-1" style="color: white; font-size: 18px;"><span class="icon-lock"></span> Log Out</a>
               </li>
               </ul>
               <a href="#" class="d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black" id="navbut"><span
