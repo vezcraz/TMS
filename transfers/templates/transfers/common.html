@@ -51,7 +51,7 @@
               <li class="nav-item my-auto ml-auto px-3">
                 <span style="line-height: .4; font-size: large;" class="" >    Welcome ${user.username} !</span> 
                <br> <a class="" href="#" data-toggle="modal" data-target="#userProfileModal" >View Profile</a>
-               <br> <a class="text-danger"   href="#" >Logout</a>
+               <br> <a class="text-danger"   href={% url 'logout' %} >Logout</a>
               </li>
              
             </ul>
@@ -62,7 +62,7 @@
         <hr>
         
       <section class="row col-md-5 pt-2  offset-md-4 container-fluid d-flex justify-content-center ">    
-        <i>Toggle to change requests</i>
+        <i>Press to toggle requests</i>
         <label class="switch m-auto">
             
               <input class="switch-input"  v-model="showApproved" type="checkbox" />
