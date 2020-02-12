@@ -18,7 +18,7 @@
 
     <!-- Vue CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
 
     <!-- AXIOS CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
@@ -35,23 +35,24 @@
 
 <body class="bg-light">
   <div id="app" class="border">
-      <nav class="m-0 p-0 navbar navbar-expand-lg">
-          <a class="navbar-brand" href="#"> <img src="{% static 'transfers/images/bp-logo.gif' %}" alt=""></a>
+      <nav class="m-0 p-0 navbar navbar-dark navbar-expand-lg">
+          <a class="navbar-brand" href="#"> <img src="{% static 'transfers/images/bp-logo.gif' %}" alt="Bits logo"></a>
         
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+          <button class="navbar-toggler text-light bg-primary" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon text-light"></span>
           </button>
+        
 
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto mr-2">
-              <li class="nav-item">
-                <img src="{% static 'transfers/images/profile-img.png' %}" class="img " style="display:inline; height:70px; width:75px;" alt="Profile Image"> 
-              </li>
+              <li class="nav-item ml-auto">
+                <img src="{% static 'transfers/images/profile-img.png' %}" class="img ml-auto " style="display:inline; height:70px; width:75px;" alt="Profile Image"> 
+             </li>
 
-              <li class="nav-item my-auto ml-auto px-3">
+              <li class="nav-item my-auto ml-auto px-3 pb-2"> 
                 <span style="line-height: .4; font-size: large;" class="" >    Welcome ${user.username} !</span> 
                <br> <a class="" href="#" data-toggle="modal" data-target="#userProfileModal" >View Profile</a>
-               <br> <a class="text-danger"   href={% url 'logout' %} >Logout</a>
+               <br> <a class="text-danger"   href="{% url 'logout' %}" >Logout</a>
               </li>
              
             </ul>
@@ -73,32 +74,48 @@
          
     </section>
     
-       <section class="row mt-3 container-fluid d-flex justify-content-around ">
-        <div v-if="!showApproved" v-for="student in data_pending" id="pending-card" class="table-primary container-fluid rounded m-2  col-md-3">
-          <div @click="modal_student=student" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
+       <section id="data-section" class="row mt-3 container-fluid d-flex justify-content-around ">
+         
+       
+      <!-- Pending Requests-->
+       <div v-if="!showApproved" v-for="student in data_pending" id="pending-card" class="table-primary container-fluid rounded m-2 offset-1 col-md-3">
+               
+              <div @click="modal_student=student, modal_student_attr=student_pending_attributes" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
+                  <table  id="student-details-table" class="table mt-2">
+                    <tr v-for="attr in student_pending_attributes">
+                      <td class="text-left"><strong>${attr.display}</strong> </td>
+                      <td id="text-overflow" >${student[attr.prop]}</td>
+                  
+                    </tr>
+                  </table>
+              </div>
+              <div class="text-center d-flex justify-content-around align-items-center">
+                  <button class="btn btn-sm  btn-outline-success text-center mb-2">Approve Request</button>
+                  <button class="btn btn-sm btn-outline-danger text-center mb-2">Reject Request</button>
+              </div>
+          
+        
+           
+        
+        </div>
+
+        <!-- Approved Requests-->
+        <div v-else v-for="student in data_approved" id="pending-card" class="table-success container-fluid rounded m-2 col-md-3">
+            
+          <div @click="modal_student=student, modal_student_attr=student_approved_attributes" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
               <table  id="student-details-table" class="table mt-2">
-                <tr v-for="attr in student_pending_attributes">
+                <tr v-for="attr in student_approved_attributes">
                   <td class="text-left"><strong>${attr.display}</strong> </td>
                   <td id="text-overflow" >${student[attr.prop]}</td>
-              
                 </tr>
               </table>
-          </div>
-          <div class="text-center d-flex justify-content-around align-items-center">
-               <button class="btn btn-sm  btn-outline-success text-center mb-2">Approve Request</button>
-               <button class="btn btn-sm btn-outline-danger text-center mb-2">Reject Request</button>
           </div>
         </div>
 
-        <div v-if="showApproved" v-for="student in data_pending" id="pending-card" class="table-success container-fluid rounded m-2 col-md-3">
-          <div @click="modal_student=student" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
-              <table  id="student-details-table" class="table mt-2">
-                <tr v-for="attr in student_pending_attributes">
-                  <td class="text-left"><strong>${attr.display}</strong> </td>
-                  <td id="text-overflow" >${student[attr.prop]}</td>
-                </tr>
-              </table>
-          </div>
+        <img v-if="loading" src="{% static 'transfers/images/loading.gif' %}" class="img " alt="Page Loading...">
+
+        <div class="text-center text-danger" v-if="((!data_approved.length && showApproved) || (!data_pending.length && !showApproved))  && !loading">
+          <img src="{% static 'transfers/images/no-record-found.png' %}" class="img container-fluid" alt="No Records Found">
         </div>
       </section>
 
@@ -117,7 +134,7 @@
             <div class="modal-body ">
 
               <table  id="student-details-modal-table" class="table mt-2">
-                <tr v-for="attr in student_pending_attributes">
+                <tr v-for="attr in modal_student_attr">
                   <td class="text-left"><strong>${attr.display}</strong> </td>
                   <td >${modal_student[attr.prop]}</td>
                 </tr>
@@ -167,7 +184,7 @@
 
   </div>
 </body>
-<footer class="footer  bg-light text-center text-dark">
+<footer class="footer container-fluid  bg-light text-center text-dark">
   PS Division, Bits Goa &copy; 2020
 </footer>
 </html>
@@ -177,22 +194,47 @@
        delimiters : ['${', '}'],
        el: "#app",
        data:{
-         user:{username:"Abc Xyz",designation:"Professor",campus:"Goa Campus",email:"abc@goa.bits-pilani.ac.in"},
+         user:{username:"User",designation:"",campus:"Goa Campus",email:"abc@goa.bits-pilani.ac.in"},
          modal_student:{},
+         modal_student_attr:[],
          showApproved:false,
-        //  data_pending:[{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'}],
-        //  student_pending_attributes:[{'display':'Student Name','prop':'name'},{'display':'CGPA','prop':'cgpa'},{'display':'Thesis Location','prop':'thesis_locale'},{'display':'Thesis Subject','prop':'thesis_subject'},{'display':'Organisation','prop':'name_of_org'},{'display':'Expected Deliverables','prop':'expected_deliverables'}]
+          data_pending:[],
+          student_pending_attributes:[],
+          data_approved:[],
+           student_approved_attributes:[],
+           loading:true,
+          //data_pending:[{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'}],
+         // student_pending_attributes:[{'display':'Student Name','prop':'name'},{'display':'CGPA','prop':'cgpa'},{'display':'Thesis Location','prop':'thesis_locale'},{'display':'Thesis Subject','prop':'thesis_subject'},{'display':'Organisation','prop':'name_of_org'},{'display':'Expected Deliverables','prop':'expected_deliverables'}],
+          //data_approved:[{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'}],
+          //student_approved_attributes:[{'display':'Student Name','prop':'name'},{'display':'CGPA','prop':'cgpa'},{'display':'Thesis Location','prop':'thesis_locale'},{'display':'Thesis Subject','prop':'thesis_subject'},{'display':'Organisation','prop':'name_of_org'}]
         },
         mounted()
         {
           axios.get('/TMS/hod/get-hod-data/')
-          .then(response => (
-              this.error=response.error,
-              this.message=response.message,
-              this.data_pending=response.data.data_pending,
-              this.student_pending_attributes=response.data.student_pending_attributes
-          ))
-        }
+          .then(response=>
+          {
+              
+              response=response.data;
 
+              this.error=response.error;
+              this.message=response.message;
+             this.data_pending=response.data.data_pending;
+             
+           
+             
+             this.data_approved=response.data.data_approved;
+             
+             this.student_pending_attributes=response.data.student_pending_attributes;
+             this.student_approved_attributes=response.data.student_approved_attributes;
+             if(response.data.user)
+             this.user=response.data.user;
+          })
+          .finally(x=>
+            {
+            this.loading=false
+          })
+        
+
+    }
    })
 </script>

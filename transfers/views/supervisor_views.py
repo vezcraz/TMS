@@ -35,10 +35,7 @@ def get_supervisor_data(request):
             {'display':'Organisation','prop':'name_of_org'},
             {'display':'Expected Deliverables','prop':'expected_deliverables'},
         ]
-        response['data']['data_pending'] = transfer_list
-        print()
-        print(transfer_list)
-        print()
+        response['data']['data_pending'] = [t for t in transfer_list]
     except Exception as e:
         response['data'] = {}
         response['error'] = True

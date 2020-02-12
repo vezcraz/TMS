@@ -3,6 +3,7 @@ nav{
 }
 #student-details-table{
 	font-size: small !important;
+	line-height: .5;
 }
 
 #userProfileModal, .form-control
