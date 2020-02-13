@@ -6,12 +6,25 @@ from transfers.constants import CampusType, UserType
 from transfers.models import PS2TSTransfer, UserProfile
 from transfers.forms import PS2TSTransferForm, TS2PSTransferForm
 
+from transfers.utils import get_application_status
+
 
 class StudentDashboardView(generic.TemplateView):
     template_name = 'transfers/student_dashboard.html'
+    context = {}
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        # To fetch the current status of the application
+        # status = -1 --> errored
+        # status = 0 --> Not applied
+        # status = 1 --> supervisor approved for PS2TS and hod approved for TS2PS
+        # status = 2 --> hod approved for PS2TS
+        # There is no supervisor in case of TS2PS transfer
+        current_userprofile = request.user.userprofile
+        (application_status, application_type) = get_application_status(current_userprofile)
+        self.context['application_status'] = application_status
+        self.context['application_type'] = application_type
+        return render(request, self.template_name, self.context)
 
 
 class PS2TSFormView(generic.FormView):
