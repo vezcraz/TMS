@@ -1,9 +1,9 @@
-from constants import UserType, TransferType
+from .constants import UserType, TransferType
 
-from models import PS2TSTransfer, TS2PSTransfer
+from .models import PS2TSTransfer, TS2PSTransfer
 
 
-def application_status(userprofile):
+def get_application_status(userprofile):
     status = None
     alias = None
     try:
