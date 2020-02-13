@@ -12,7 +12,6 @@
                 <div class="col" style="margin: 0 auto; max-width: 500px;">
                     <form action="" method="post">
                         {% csrf_token %}
-                        {{ form.applicant|as_crispy_field }}
                         <div id="div_id_hod_email" class="control-group">
                             <label for="id_hod_email" class="control-label requiredField">
                                 HOD Email<span class="asteriskField">*</span>

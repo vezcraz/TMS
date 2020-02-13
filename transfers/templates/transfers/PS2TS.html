@@ -12,7 +12,6 @@
                 <div class="col" style="margin: 0 auto; max-width: 500px;">
                     <form action="" method="post">
                         {% csrf_token %}
-                        {{ form.applicant|as_crispy_field }}
                         {{ form.supervisor_email|as_crispy_field }}
                         <div class="row control-group" style="padding: 0 30px 15px 30px;">
                             <div class="col-12">
