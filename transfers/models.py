@@ -122,3 +122,11 @@ class TS2PSTransfer(models.Model):
     class Meta:
         verbose_name = 'TS to PS Application'
         verbose_name_plural = 'TS to PS Applications'
+
+class DeadlineModel(models.Model):
+ 
+    deadline_PS2TS = models.DateTimeField(null = True, blank = True)
+    deadline_TS2PS = models.DateTimeField(null = True, blank = True)
+    is_active_PS2TS = models.BooleanField(default=False)
+    is_active_TS2PS = models.BooleanField(default=False)
+    message = models.TextField(null=True,blank=True)
