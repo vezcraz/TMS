@@ -18,7 +18,8 @@ def get_hod_data(request):
     try:
         current_user = request.user
         transfer_qs = PS2TSTransfer.objects.filter(
-            hod_email = current_user.email
+            hod_email = current_user.email,
+            is_supervisor_approved = True
         ).values(
             'applicant__user__first_name', 'applicant__user__last_name',
             'cgpa', 'thesis_locale', 'supervisor_email',
