@@ -37,7 +37,6 @@ class PS2TSFormView(generic.FormView):
         form = self.form_class(initial=self.initial)
         # is supervisor email valid (present in DB)?
         invalid_supervisor_email = False
-        form.fields["applicant"].queryset = UserProfile.objects.filter(user_type=0)
         hod_email_qs = UserProfile.objects.filter(
             user_type=UserType.HOD.value
             ).filter(
@@ -54,6 +53,9 @@ class PS2TSFormView(generic.FormView):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
+        post = request.POST.copy()
+        post['applicant'] = request.user.userprofile
+        request.POST = post
         form = self.form_class(request.POST)
         # is supervisor email valid (present in DB)?
         invalid_supervisor_email = False
@@ -66,7 +68,6 @@ class PS2TSFormView(generic.FormView):
                 return render(request, "transfers/student_dashboard.html")
             else:
                 invalid_supervisor_email = True
-        form.fields["applicant"].queryset = UserProfile.objects.filter(user_type=UserType.STUDENT.value)
         hod_email_qs = UserProfile.objects.filter(
             user_type=UserType.HOD.value
             ).filter(
@@ -91,7 +92,6 @@ class TS2PSFormView(generic.FormView):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
-        form.fields["applicant"].queryset = UserProfile.objects.filter(user_type=0)
         hod_email_qs = UserProfile.objects.filter(
             user_type=UserType.HOD.value
             ).filter(
@@ -104,11 +104,13 @@ class TS2PSFormView(generic.FormView):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
+        post = request.POST.copy()
+        post['applicant'] = request.user.userprofile
+        request.POST = post
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
             return render(request, "transfers/student_dashboard.html")
-        form.fields["applicant"].queryset = UserProfile.objects.filter(user_type=0)
         hod_email_qs = UserProfile.objects.filter(
             user_type=UserType.HOD.value
             ).filter(
@@ -124,7 +126,7 @@ class TS2PSFormView(generic.FormView):
 def validate_supervisor_email(request):
     email = request.GET.get('email', None)
     supervisor_email_list = UserProfile.objects.filter(
-        user_type=UserType.SUPERVISOR.value, user__email__contains=email
+        user_type=UserType.SUPERVISOR.value, user__email=email
     )
     name = ''
     campus = ''
@@ -137,7 +139,7 @@ def validate_supervisor_email(request):
             campus = "BITS Pilani, Goa Campus"
         elif campus == CampusType.HYD.value:
             campus = "BITS Pilani, Hyderabad Campus"
-        elif campus == CampusType.Pilani.value:
+        elif campus == CampusType.PILANI.value:
             campus = "BITS Pilani, Pilani Campus"
     data = {
         'is_valid': is_valid,
