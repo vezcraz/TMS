@@ -1,5 +1,6 @@
-from .constants import UserType, TransferType
+from django.core.mail import send_mail
 
+from .constants import UserType, TransferType
 from .models import PS2TSTransfer, TS2PSTransfer
 
 
@@ -37,3 +38,33 @@ def _get_ts2ps_application_status(userprofile, ts2ps):
         return 0
     else:
         return 1
+
+def notify_ps2ts(request):
+    body = ""
+    data=PS2TSTransfer.objects.filter(applicant = request.user.userprofile)[0]
+    print(str(data.hod_email))
+    body =  str("\nID: " + data.applicant.user.username+
+    "\nName: " + data.applicant.user.first_name + " " +data.applicant.user.last_name +
+    "\nTransfer Type: " + data.get_sub_type_display()+
+    "\nCGPA: " + str(data.cgpa)+
+    "\nThesis Locale: " + data.get_thesis_locale_display()+
+    "\nThesis Subject: " + data.thesis_subject+
+    "\nOrganization Name: " + data.name_of_org+
+    "\nExpected Outcome: " + data.expected_deliverables)
+    mail(data,request,body)
+
+def notify_ts2ps(request):
+    body = ""
+    data=TS2PSTransfer.objects.filter(applicant = request.user.userprofile)[0]
+    body =  str("\nID: " + data.applicant.user.username+
+    "\nName: " + data.applicant.user.first_name + " " +data.applicant.user.last_name +
+    "\nTransfer Type: " + data.get_sub_type_display()+
+    "\nCGPA: " + str(data.cgpa)+
+    "\nReason For Transfer: " + data.reason_for_transfer+
+    "\nOrganization Name: " + data.name_of_org)
+    mail(data,request,body)
+
+def mail(data, request, body):
+    send_mail("Transfer Application: " + request.user.username, body,
+        'psdmail2020@gmail.com',[str(data.hod_email)],
+        fail_silently=False)
