@@ -128,3 +128,11 @@ STATIC_URL = '/static/'
 # For redirects
 LOGIN_REDIRECT_URL = '/TMS/login-redirect/'
 LOGOUT_REDIRECT_URL = '/TMS/login-redirect/'
+
+
+# Email service
+EMAIL_HOST= 'smtp.gmail.com'
+EMAIL_PORT= '587'
+EMAIL_HOST_USER= 'psdmail2020@gmail.com'
+EMAIL_HOST_PASSWORD='Psdmail@123'
+EMAIL_USE_TLS = True

@@ -6,7 +6,7 @@ from transfers.constants import CampusType, UserType
 from transfers.models import PS2TSTransfer, UserProfile
 from transfers.forms import PS2TSTransferForm, TS2PSTransferForm
 
-from transfers.utils import get_application_status
+from transfers.utils import get_application_status, notify_ps2ts, notify_ts2ps
 
 
 class StudentDashboardView(generic.TemplateView):
@@ -65,6 +65,7 @@ class PS2TSFormView(generic.FormView):
                 user_type=UserType.SUPERVISOR.value, user__email=email)
             if supervisor_email_qs:
                 form.save()
+                notify_ps2ts(request)
                 return render(request, "transfers/student_dashboard.html")
             else:
                 invalid_supervisor_email = True
@@ -110,6 +111,7 @@ class TS2PSFormView(generic.FormView):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
+            notify_ts2ps(request)
             return render(request, "transfers/student_dashboard.html")
         hod_email_qs = UserProfile.objects.filter(
             user_type=UserType.HOD.value
