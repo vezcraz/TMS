@@ -139,7 +139,7 @@ def validate_supervisor_email(request):
             campus = "BITS Pilani, Goa Campus"
         elif campus == CampusType.HYD.value:
             campus = "BITS Pilani, Hyderabad Campus"
-        elif campus == CampusType.Pilani.value:
+        elif campus == CampusType.PILANI.value:
             campus = "BITS Pilani, Pilani Campus"
     data = {
         'is_valid': is_valid,
