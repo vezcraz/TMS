@@ -28,18 +28,14 @@
         <br>      
         <p class="text-danger"> <b>Note</b>: Each type of Form can be filled a maximum of 2 times. After 3 attempts,<br> no further requests will be considered. Kindly fill the forms judiciously. </p>
 
-        <br>
-        <h1 class="text-dark"> Deadline </h1>
-        <p class="text-dark"> Deadline for each attempt is as follows: </p>
-        <p class="text-dark"> <b>Attempt 1:</b> {{deadlines.0}} </p>
-        <p class="text-dark"> <b>Attempt 2:</b> {{deadlines.1}} </p>    
+           
         
     </div>   
 
     <!--
 		Apply
     -->
-    <div class="container">
+    <!-- <div class="container">
     <div class="row text-center text-dark form-container-row">
     <div class="col-md-8 shadow mb-5 table-light rounded box text-center" style="margin: 20px auto;" id="applyPS2TS">
         <div class="row form-row">
@@ -80,7 +76,7 @@
     </div>
 	</div>
 	</div>
-    
+     -->
 
     <!--
 		Applied
@@ -90,9 +86,9 @@
     	<h2 class="text-dark"> Transfer Request </h2>
         <h4 class="text-dark col-md-7">Status of Application : </h4>	    
         <div class="col-md-12">
-        	<button id="appliedL1" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="L1">Default</button>   
-        	<button id="appliedL2" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="L2">Default</button>
-        	<button id="appliedL3" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="L3">Default</button>
+        	<button id="appliedL1" type="button" class="btn btn-success btn-arrow-right" data-toggle="tooltip" data-placement="top" title="Status of Form Submission">Submitted Succesfully</button>   
+        	<button id="appliedL2" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="Status of Form Approval">Default</button>
+        	<!-- <button id="appliedL3" type="button" class="btn btn-secondary btn-arrow-right" data-toggle="tooltip" data-placement="top" title="L3">Default</button> -->
         </div>
         <form class="signup-form1 shadow col-md-12 p-3 mb-5 table-light rounded text-center" id="appliedForm" action="" method="post" readonly> 
             {% csrf_token %}                
@@ -105,28 +101,28 @@
                 </div> 
 
                 <!-- Edit when Rejected -->
-                <input class="btn btn-secondary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="editForm" value="Edit Form" onclick="location.href='/TMS/student/PS2TS';">
+                <!-- <input class="btn btn-secondary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="editForm" value="Edit Form" onclick="location.href='/TMS/student/PS2TS';"> -->
         </form>
         
         
         <script type="text/javascript">
-        	var status = [3,3,2];   
-        	var edit = 0;
+        	var status = {{ application_status }};   
+        	/*var edit = 0;
         	function checkStatus() 
         	{
         	 	return edit;         	
-     	  	}         	  	
+     	  	}*/         	  	
         	function getStatusToWords(status_value)
 	        {
 	            if(status_value == 0)
 	            {
-	                return "Not Sent";
+	                return "Pending";
 	            }
 	            else if(status_value == 1)
 	            {
-	                return "In Progress";   
+	                return "Approved";   
 	            }
-	            else if(status_value == 2)
+	            /*else if(status_value == 2)
 	            {	                
 	                edit=1;
 	                return "Rejected";	
@@ -134,35 +130,38 @@
 	            else if(status_value == 3)
 	            {
 	            	return "Approved";
-	            }
+	            }*/
 	        }
 
 	        function getStatus(status_value)
 	        {
 	            if(status_value == 0) //Default
 	            {
-	                return "btn btn-secondary btn-arrow-right";
+	                return "btn btn-warning btn-arrow-right";
 	            }
-	            else if(status_value == 1) //In process
+	            /*else if(status_value == 1) //In process
 	            {
 	                return "btn btn-warning btn-arrow-right";   
 	            }
 	            else if(status_value == 2) //Rejected
 	            {
 	                return "btn btn-danger btn-arrow-right";   
-	            }
-	            else if(status_value == 3) //Approved
+	            }*/
+	            else if(status_value == 1) //Approved
 	            {	
 	            	return "btn btn-success btn-arrow-right";
 	            }
-	        }                      	
-			for (var i = 1; i <= 3; i++) 
+	        }       
+	        var name = "appliedL2";            
+           	document.getElementById(name).className = getStatus(status);
+           	document.getElementById(name).textContent = getStatusToWords(status);
+			/*for (var i = 1; i <= 3; i++) 
 			{
 				var name = "appliedL" + i.toString();	
 				console.log(status[2*i-2]);			
 				document.getElementById(name).className = getStatus(status[2*i-2]);
 				document.getElementById(name).textContent = getStatusToWords(status[2*i-2]);          		
-			} 
+			}*/ 
 			
     	</script>
     </div>
@@ -171,7 +170,7 @@
     <!--
 	 	Edit Applied
 	-->
-    <div class="table-light site-section col-md-12 mt-5 text-center" id="editApplied">
+    <!-- <div class="table-light site-section col-md-12 mt-5 text-center" id="editApplied">
     	<h2 class="text-dark"> Edited Transfer Request </h2>
         <h4 class="text-dark col-md-7">Status of Application : </h4>
 	    
@@ -194,25 +193,25 @@
        		 	</div>     
         </form>  
         
-    </div>
+    </div> -->
 
 </div>	
 
 	<script type="text/javascript">
-	    var CURRENT_VIEW = 2;
-	    var Rejected = 0;
-	    if (CURRENT_VIEW==2) //Not applied
+	    var CURRENT_VIEW = {{ has_applied }};
+	    //var Rejected = 0;
+	    if (CURRENT_VIEW==0) //Not applied
 		{	
 			document.getElementById("notApplied").style.display = "";
             document.getElementById("applied").style.display = "none";
-            document.getElementById("editApplied").style.display = "none";
-            document.getElementById("applyPS2TS").style.display = "none";
-    		document.getElementById("applyTS2PS").style.display = "none";		
-		    function changeDisplayDiv(typeOfForm)
+            //document.getElementById("editApplied").style.display = "none";
+            //document.getElementById("applyPS2TS").style.display = "none";
+    		//document.getElementById("applyTS2PS").style.display = "none";		
+		    /*function changeDisplayDiv(typeOfForm)
 	    	{	        
 	            document.getElementById("notApplied").style.display = "none";
 	            document.getElementById("applied").style.display = "none";
-	            document.getElementById("editApplied").style.display = "none";
+	            //document.getElementById("editApplied").style.display = "none";
 	            if (typeOfForm==1) 
 	            {
             		document.getElementById("applyPS2TS").style.display = "";
@@ -223,39 +222,38 @@
 	            	document.getElementById("applyPS2TS").style.display = "none";
             		document.getElementById("applyTS2PS").style.display = "";
 	            }
-	        }
-	        function home()
+	        }*/
+	        /*function home()
 	        {
 	        	document.getElementById("notApplied").style.display = "";
 				document.getElementById("applied").style.display = "none";
 		    	document.getElementById("editApplied").style.display = "none";
 		    	document.getElementById("applyPS2TS").style.display = "none";
     			document.getElementById("applyTS2PS").style.display = "none";	
-	        }
+	        }*/
 
 	    }
 	    else if (CURRENT_VIEW==1) //Applied
 		{
-			Rejected = checkStatus();
+			//Rejected = checkStatus();
 			document.getElementById("notApplied").style.display = "none";
 			document.getElementById("applied").style.display = "";
-		    document.getElementById("editApplied").style.display = "none";
-		    document.getElementById("applyPS2TS").style.display = "none";
-    		document.getElementById("applyTS2PS").style.display = "none";
-    		if (Rejected==0)
+		    //document.getElementById("editApplied").style.display = "none";
+		    //document.getElementById("applyPS2TS").style.display = "none";
+    		//document.getElementById("applyTS2PS").style.display = "none";
+    		/*if (Rejected==0)
     			document.getElementById("editForm").style.display = "none";		    
     		else if (Rejected==1)
-    			document.getElementById("editForm").style.display = "";
+    			document.getElementById("editForm").style.display = "";*/
 	    }
-	    else if (CURRENT_VIEW==0) //Edit Applied
+	    /*else if (CURRENT_VIEW==0) //Edit Applied
 		{
 			document.getElementById("notApplied").style.display = "none";
 			document.getElementById("applied").style.display = "none";
 		    document.getElementById("editApplied").style.display = "";
 		    document.getElementById("applyPS2TS").style.display = "none";
-    		document.getElementById("applyTS2PS").style.display = "none";
-		    document.getElementById("noMoreInformativeApplications").style.display = "none";		    
-	    }
+    		document.getElementById("applyTS2PS").style.display = "none";		    		    
+	    }*/
 	</script>	   
 	 
 

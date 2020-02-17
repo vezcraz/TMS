@@ -14,5 +14,6 @@ urlpatterns = [
     path('supervisor/home/', supervisor_views.SupervisorHomeView.as_view()),
     path('validate_supervisor_email/', student_views.validate_supervisor_email),
     path('hod/get-hod-data/', hod_views.get_hod_data),
-    path('assoc_dean/home/', assoc_dean_views.AssocDeanView.as_view()),
+    path('assoc-dean/home/', assoc_dean_views.AssocDeanHomeView.as_view()),
+    path('assoc-dean/home/type/<type>', assoc_dean_views.AssocDeanView.as_view()),
 ]

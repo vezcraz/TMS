@@ -14,3 +14,5 @@ def login_redirect_view(request):
             return redirect('/TMS/supervisor/home/')
         elif user_type == UserType.HOD.value:
             return redirect('/TMS/hod/home/')
+        elif user_type == UserType.AD.value:
+            return redirect('/TMS/assoc-dean/home/')
