@@ -27,8 +27,6 @@ class StudentDashboardView(generic.TemplateView):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        # Status of application remains 0 until both
-        # supervisor and hod approve the application
         current_userprofile = request.user.userprofile
         (application_type, has_applied, application_status,
             error) = get_application_status(current_userprofile)
@@ -36,7 +34,6 @@ class StudentDashboardView(generic.TemplateView):
         self.context['has_applied'] = has_applied
         self.context['application_status'] = application_status
         self.context['error'] = error
-        print(self.context)
         return render(request, self.template_name, self.context)
 
 
