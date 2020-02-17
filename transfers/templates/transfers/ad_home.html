@@ -1,0 +1,150 @@
+{% extends 'transfers/website_base.html' %}
+{% block content %}
+
+<div class="row" id="mainContent">
+    
+    <!--
+		Not applied
+    -->
+    <div class="table-light shadow site-section col-md-12 text-center" id="intro">	   
+
+      <br>    
+      <h1 class="text-dark"> Transfer Management System </h1>
+      <p class="text-dark" style="font-size: 22px"> Please Select the Category of Forms : </p>
+      <div class="btn-group btn p-0 mt-2" id="typeOfPage">
+          <div class="btn-group-toggle btn" id="type" data-toggle="buttons">
+          	<label class="btn btn-primary m-2 rounded-1" style="font-size: 20px">
+          		<input type="radio" name="type" id="0" value="0" autocomplete="off">PS To TS Requests
+      		  </label>         
+            <label class="btn btn-secondary m-2 rounded-1" style="font-size: 20px">  
+          		<input type="radio" name="type" id="1" value="1" autocomplete="off">TS To PS Requests
+            </label>
+          </div>
+      </div>    
+    </div>
+
+    <div class="table-responsive shadow">
+      <table class="table text-center table-stripped table-hover ">
+        <br>
+        <h2 id="heading" class="text-center text-dark"></h2>
+        <br>
+        <thead id="table-head">
+          
+        </thead>
+        <tbody class="text-center" id="table-body">
+
+
+        </tbody>
+
+      </table>
+    </div>	
+</div>
+
+    
+<br>
+<br>
+
+
+<script type="text/javascript">
+
+    function getData(type)
+  	{
+		  var type_val=type;
+      console.log(type_val);
+	    $.ajax({
+	      url: '/TMS/assoc-dean/home/type/'+type_val,
+	      type:'GET',
+	      success: function(response)
+	      {
+	        $('#table-body').html('');
+	        $('#table-head').html('');
+          $('#heading').html('');
+	        var len=response.length;
+	      	console.log(len);
+	        if(type_val == 0)
+	        {  
+            $('#heading').html('Status of PS to TS Transfer Requests');
+				    var head="<tr> <th>College ID</th><th>Name</th><th>Supervisor</th><th>HoD</th></tr>"
+				    $('#table-head').html(head);
+
+  				if(len==0)
+  				{
+  					var entry="<tr><td colspan=4> <h3>No Applications</h3></td></tr>";
+  					$('#table-body').append(entry);
+  				}
+
+  				for(var i=0;i<len;i++)
+  				{					
+  					var id = response[i].applicant__user__username;
+  					var name = response[i].applicant__user__first_name + response[i].applicant__user__last_name;
+            var hod = response[i].is_hod_approved;
+            var sup = response[i].is_supervisor_approved;
+  					var entry="<tr><td>"+id+"</td><td>"+name+"</td><td>"+sup+"</td><td>"+hod+"</td></tr>";
+  					$('#table-body').append(entry);
+  				}
+
+	        }
+	        else if(type_val==1)
+	        {
+            $('#heading').html('Status of TS to PS Transfer Requests');
+				    var head="<tr> <th>College ID</th><th>Name</th><th>HoD</th></tr>"
+				    $('#table-head').html(head);
+
+    				if(len==0)
+    				{
+    					var entry="<tr><td colspan=3> <h3>No Applications</h3></td></tr>";
+    					$('#table-body').append(entry);
+    				}
+
+    				for(var i=0;i<len;i++)
+    				{					
+    					var id = response[i].applicant__user__username;
+    					var name = response[i].applicant__user__first_name + response[i].applicant__user__last_name;
+              var hod = response[i].is_hod_approved;
+    					var entry="<tr><td>"+id+"</td><td>"+name+"</td><td>"+hod+"</td></tr>";
+    					$('#table-body').append(entry);
+    				}
+	        }         
+
+	      }
+	    });
+	}
+  $(document).ready(function(){
+    $('#heading').html('<i><h4>Select The Type of Requests</h4></i>');
+  });
+  $('#type :input').change(function(){
+  var type=$("input:radio[name='type']:checked").val();
+  getData(type);
+  });
+</script>
+
+
+
+<style type="text/css">
+  
+table
+{
+  table-layout: fixed;
+  /*font-size:80%;*/
+  width: 100%;
+
+}
+.elementRow td
+{
+  max-width: 30%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+}
+#name{
+  max-width: 30%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /*word-wrap: break-word;*/
+}
+</style>
+
+
+{% endblock %}
