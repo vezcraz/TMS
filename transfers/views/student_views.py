@@ -14,9 +14,8 @@ class StudentDashboardView(generic.TemplateView):
     context = {}
 
     def get(self, request, *args, **kwargs):
-        # To fetch the current status of the application
         # Status of application remains 0 until both
-        # supervisor and hod approves the application
+        # supervisor and hod approve the application
         current_userprofile = request.user.userprofile
         (application_type, has_applied, application_status,
             error) = get_application_status(current_userprofile)

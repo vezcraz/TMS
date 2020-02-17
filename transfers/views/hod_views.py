@@ -17,15 +17,28 @@ def get_hod_data(request):
     response = {}
     try:
         current_user = request.user
-        transfer_qs = PS2TSTransfer.objects.filter(
+        # applications where approval is pending
+        pending_applications_qs = PS2TSTransfer.objects.filter(
             hod_email = current_user.email,
-            is_supervisor_approved = True
+            is_supervisor_approved = True,
+            is_hod_approved = False,
         ).values(
             'applicant__user__first_name', 'applicant__user__last_name',
             'cgpa', 'thesis_locale', 'supervisor_email',
             'thesis_subject', 'name_of_org', 'expected_deliverables'
         )
-        transfer_list = list(transfer_qs)
+        pending_applications_list = list(pending_applications_qs)
+        # approved applications
+        approved_applications_qs = PS2TSTransfer.objects.filter(
+            hod_email = current_user.email,
+            is_supervisor_approved = True,
+            is_hod_approved = True,
+        ).values(
+            'applicant__user__first_name', 'applicant__user__last_name',
+            'cgpa', 'thesis_locale', 'supervisor_email',
+            'thesis_subject', 'name_of_org', 'expected_deliverables'
+        )
+        approved_applications_list = list(approved_applications_qs)
         response['error'] = False
         response['message'] = 'success'
         response['data'] = {}
@@ -39,8 +52,8 @@ def get_hod_data(request):
             {'display':'Organisation','prop':'name_of_org'},
             {'display':'Expected Deliverables','prop':'expected_deliverables'},
         ]
-        response['data']['data_pending'] = [t for t in transfer_list]
-        response['data']['data_approved']=''
+        response['data']['data_pending'] = [a for a in pending_applications_list]
+        response['data']['data_approved']= [a for a in approved_applications_list]
     except Exception as e:
         response['data'] = {}
         response['error'] = True
