@@ -15,15 +15,15 @@ class StudentDashboardView(generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
         # To fetch the current status of the application
-        # status = -1 --> errored
-        # status = 0 --> Not applied
-        # status = 1 --> supervisor approved for PS2TS and hod approved for TS2PS
-        # status = 2 --> hod approved for PS2TS
-        # There is no supervisor in case of TS2PS transfer
+        # Status of application remains 0 until both
+        # supervisor and hod approves the application
         current_userprofile = request.user.userprofile
-        (application_status, application_type) = get_application_status(current_userprofile)
-        self.context['application_status'] = application_status
+        (application_type, has_applied, application_status,
+            error) = get_application_status(current_userprofile)
         self.context['application_type'] = application_type
+        self.context['has_applied'] = has_applied
+        self.context['application_status'] = application_status
+        self.context['error'] = error
         return render(request, self.template_name, self.context)
 
 

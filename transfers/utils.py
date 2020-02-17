@@ -7,30 +7,39 @@ from .models import PS2TSTransfer, TS2PSTransfer
 def get_application_status(userprofile):
     status = None
     alias = None
+    has_applied = None
+    error = None
     try:
         ps2ts = PS2TSTransfer.objects.filter(applicant=userprofile)
         ts2ps = TS2PSTransfer.objects.filter(applicant=userprofile)
         if ps2ts.count() == 1:
             alias = TransferType.PS2TS.value
+            has_applied = 1
+            error = 0
             status = _get_ps2ts_application_status(userprofile, ps2ts)
         elif ts2ps.count() == 1:
             alias = TransferType.TS2PS.value
+            has_applied = 1
             status = _get_ts2ps_application_status(userprofile. ts2ps)
+            error = 0
         else:
             status = -1
+            has_applied = 0
+            error = 0
     except Exception as e:
         status = -1
+        has_applied = 0
+        error = 1
     
-    return (status, alias)
+    return (alias, has_applied, status, error)
 
 def _get_ps2ts_application_status(userprofile, ps2ts):
     application = ps2ts[0]
-    if not application.is_supervisor_approved and not application.is_hod_approved:
+    # until both supervisor and hod approves the application, the status remains 0
+    if not application.is_supervisor_approved or not application.is_hod_approved:
         return 0
-    elif application.is_supervisor_approved and not application.is_hod_approved:
-        return 1
     else:
-        return 2
+        return 1
 
 def _get_ts2ps_application_status(userprofile, ts2ps):
     application = ts2ps[0]
