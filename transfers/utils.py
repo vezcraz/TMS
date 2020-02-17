@@ -77,3 +77,15 @@ def mail(data, request, body):
     send_mail("Transfer Application: " + request.user.username, body,
         'psdmail2020@gmail.com',[str(data.hod_email)],
         fail_silently=False)
+
+def update_application(applicant, approved_by):
+    try:
+        transfer_form = PS2TSTransfer.objects.get(applicant=applicant)
+        if approved_by == UserType.SUPERVISOR.value:
+            transfer_form.is_supervisor_approved = True
+        else:
+            transfer_form.is_hod_approved = True
+        transfer_form.save()
+        return True
+    except Exception as e:
+        return False

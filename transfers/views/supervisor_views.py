@@ -53,7 +53,7 @@ def get_supervisor_data(request):
             {'display':'Student First Name','prop':'applicant__user__first_name'},
             {'display':'Student Last Name','prop':'applicant__user__last_name'},
             {'display':'CGPA','prop':'cgpa'},
-            {'display': 'Supervisor (on-campus)', 'prop':'supervisor_email'},
+            {'display': 'Supervisor (on-campus) email', 'prop':'supervisor_email'},
             {'display':'Thesis Location','prop':'thesis_locale'},
             {'display':'Thesis Subject','prop':'thesis_subject'},
             {'display':'Organisation','prop':'name_of_org'},
@@ -73,4 +73,17 @@ def get_supervisor_data(request):
         }
         response['error'] = True
         response['message'] = 'error'
+    return JsonResponse(response, safe=False)
+
+def approve_transfer_request(request):
+    applicant = request.GET['applicant__user__username']
+    approved_by = request.user.userprofile.user_type
+    saved = update_application(applicant, approved_by)
+    response = {}
+    if saved:
+        response['error'] = False
+        response['message'] = 'Application approved.'
+    else:
+        response['error'] = True
+        response['message'] = 'Failed to approve application!'
     return JsonResponse(response, safe=False)

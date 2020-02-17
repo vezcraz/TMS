@@ -4,12 +4,16 @@ from django.views import generic
 
 from transfers.constants import UserType, CampusType
 from transfers.models import PS2TSTransfer, UserProfile
+from transfers.utils import update_application
 
 
 class HODHomeView(generic.TemplateView):
     template_name = 'transfers/common.html'
 
     def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
 
@@ -25,6 +29,7 @@ def get_hod_data(request):
             is_supervisor_approved = True,
             is_hod_approved = False,
         ).values(
+            'applicant__user__username',
             'applicant__user__first_name', 'applicant__user__last_name',
             'cgpa', 'thesis_locale', 'supervisor_email',
             'thesis_subject', 'name_of_org', 'expected_deliverables'
@@ -36,6 +41,7 @@ def get_hod_data(request):
             is_supervisor_approved = True,
             is_hod_approved = True,
         ).values(
+            'applicant__user__username',
             'applicant__user__first_name', 'applicant__user__last_name',
             'cgpa', 'thesis_locale', 'supervisor_email',
             'thesis_subject', 'name_of_org', 'expected_deliverables'
@@ -52,6 +58,7 @@ def get_hod_data(request):
 
         }
         attributes_for_display = [
+            {'display': 'Student ID', 'prop':'applicant__user__username'},
             {'display':'Student First Name','prop':'applicant__user__first_name'},
             {'display':'Student Last Name','prop':'applicant__user__last_name'},
             {'display':'CGPA','prop':'cgpa'},
@@ -75,4 +82,20 @@ def get_hod_data(request):
         }
         response['error'] = True
         response['message'] = 'error'
+    return JsonResponse(response, safe=False)
+
+
+def approve_transfer_request(request):
+    # print(applicant)
+    print(request.GET)
+    applicant = request.POST['applicant__user__username']
+    approved_by = request.user.userprofile.user_type
+    saved = update_application(applicant, approved_by)
+    response = {}
+    if saved:
+        response['error'] = False
+        response['message'] = 'Application approved.'
+    else:
+        response['error'] = True
+        response['message'] = 'Failed to approve application!'
     return JsonResponse(response, safe=False)
