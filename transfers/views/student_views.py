@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from django.http import JsonResponse
+from django.shortcuts import redirect
 
 from transfers.constants import CampusType, UserType
 from transfers.models import PS2TSTransfer, UserProfile
@@ -23,6 +24,19 @@ class StudentDashboardView(generic.TemplateView):
         self.context['has_applied'] = has_applied
         self.context['application_status'] = application_status
         self.context['error'] = error
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, *args, **kwargs):
+        # Status of application remains 0 until both
+        # supervisor and hod approve the application
+        current_userprofile = request.user.userprofile
+        (application_type, has_applied, application_status,
+            error) = get_application_status(current_userprofile)
+        self.context['application_type'] = application_type
+        self.context['has_applied'] = has_applied
+        self.context['application_status'] = application_status
+        self.context['error'] = error
+        print(self.context)
         return render(request, self.template_name, self.context)
 
 
@@ -65,7 +79,7 @@ class PS2TSFormView(generic.FormView):
             if supervisor_email_qs:
                 form.save()
                 notify_ps2ts(request)
-                return render(request, "transfers/student_dashboard.html")
+                return redirect('/TMS/student/dashboard/')
             else:
                 invalid_supervisor_email = True
         hod_email_qs = UserProfile.objects.filter(
@@ -111,7 +125,7 @@ class TS2PSFormView(generic.FormView):
         if form.is_valid():
             form.save()
             notify_ts2ps(request)
-            return render(request, "transfers/student_dashboard.html")
+            return redirect('/TMS/student/dashboard/')
         hod_email_qs = UserProfile.objects.filter(
             user_type=UserType.HOD.value
             ).filter(
