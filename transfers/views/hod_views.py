@@ -86,9 +86,7 @@ def get_hod_data(request):
 
 
 def approve_transfer_request(request):
-    # print(applicant)
-    print(request.GET)
-    applicant = request.POST['applicant__user__username']
+    applicant = request.GET['student_username']
     approved_by = request.user.userprofile.user_type
     saved = update_application(applicant, approved_by)
     response = {}

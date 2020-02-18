@@ -83,7 +83,7 @@
               <div @click="modal_student=student, modal_student_attr=student_pending_attributes" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
                   <table  id="student-details-table" class="table mt-2">
                     <tr v-for="attr in student_pending_attributes">
-                      <td class="text-left"><strong>${attr.display}</strong> </td>
+                      <td id="text-overflow" class="text-left"><strong>${attr.display}</strong> </td>
                       <td id="text-overflow" >${student[attr.prop]}</td>
                   
                     </tr>
@@ -100,12 +100,13 @@
         </div>
 
         <!-- Approved Requests-->
-        <div v-else v-for="student in data_approved" id="pending-card" class="table-success container-fluid rounded m-2 col-md-3">
+          
+        <div v-if="showApproved" v-for="student in data_approved" id="pending-card" class="table-success container-fluid rounded m-2 col-md-3">
             
           <div @click="modal_student=student, modal_student_attr=student_approved_attributes" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
               <table  id="student-details-table" class="table mt-2">
                 <tr v-for="attr in student_approved_attributes">
-                  <td class="text-left"><strong>${attr.display}</strong> </td>
+                  <td class="text-left" id="text-overflow"><strong>${attr.display}</strong> </td>
                   <td id="text-overflow" >${student[attr.prop]}</td>
                 </tr>
               </table>
@@ -218,7 +219,7 @@
        {
          getData()
          {
-            axios.get('/TMS/data/hod/get-application-data/')
+            axios.get('/TMS/data/get-application-data/')
             .then(response=>
             {
               
@@ -234,10 +235,11 @@
                 
                 this.data_pending=response.data.data_pending;
                 this.data_approved=response.data.data_approved;
-       
+                console.log(this.data_approved)
+              
                 this.student_pending_attributes=response.data.student_pending_attributes;
                 this.student_approved_attributes=response.data.student_approved_attributes;
-                
+                console.log(this.student_approved_attributes)  
                 if(response.data.user)
                 this.user=response.data.user;
               }
@@ -251,14 +253,14 @@
          {
            console.log(stud);
            if(confirm('Are you sure to approve '+stud.applicant__user__first_name+'\'s request'))
-           axios.get('/TMS/data/hod/approve-transfer-request/',{
-             data: {'applicant__user__username':stud.applicant__user__username}})
+           axios.get('/TMS/data/approve-transfer-request?student_username='+stud.applicant__user__username)
            .then(response=>
            {
+              response = response.data;
               if(response.error)
               alert('Error Approving this request, Contact Adminstrator', response.message);
               else
-              alert('Request approved!');
+              alert('Request approved! ;;',response.message);
            })
            .catch(error =>
            {

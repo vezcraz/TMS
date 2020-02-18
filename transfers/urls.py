@@ -28,8 +28,8 @@ urlpatterns = [
 # data related urls (usually requested by ajax calls in already rendered templates)
 urlpatterns += [
     # hod urls
-    path('data/hod/get-application-data/', redirect_views.application_data_redirect_view),
-    path('data/hod/approve-transfer-request/', redirect_views.approve_transfer_request_redirect_view),
+    path('data/get-application-data/', redirect_views.application_data_redirect_view),
+    path('data/approve-transfer-request/', redirect_views.approve_transfer_request_redirect_view),
     # AD urls
     path('data/assoc-dean/get-transfer-lists/type/<type>/', assoc_dean_views.AssocDeanLisApplicationstView.as_view()),
 ]

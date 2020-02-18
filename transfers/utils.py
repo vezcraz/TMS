@@ -80,7 +80,7 @@ def mail(data, request, body):
 
 def update_application(applicant, approved_by):
     try:
-        transfer_form = PS2TSTransfer.objects.get(applicant=applicant)
+        transfer_form = PS2TSTransfer.objects.get(applicant__user__username=applicant)
         if approved_by == UserType.SUPERVISOR.value:
             transfer_form.is_supervisor_approved = True
         else:
@@ -88,6 +88,7 @@ def update_application(applicant, approved_by):
         transfer_form.save()
         return True
     except Exception as e:
+        print(e) # left for debugging
         return False
 
 def fetch_ps2ts_list():

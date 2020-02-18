@@ -4,6 +4,7 @@ from django.views import generic
 
 from transfers.constants import UserType, CampusType
 from transfers.models import PS2TSTransfer, UserProfile
+from transfers.utils import update_application
 
 
 class SupervisorHomeView(generic.TemplateView):
@@ -21,9 +22,10 @@ def get_supervisor_data(request):
         campus_alias = CampusType._member_names_[current_user.userprofile.campus]
         # applications where approval is pending
         pending_applications_qs = PS2TSTransfer.objects.filter(
-            hod_email = current_user.email,
-            is_hod_approved = False
+            supervisor_email = current_user.email,
+            is_supervisor_approved = False,
         ).values(
+            'applicant__user__username',
             'applicant__user__first_name', 'applicant__user__last_name',
             'cgpa', 'thesis_locale', 'supervisor_email',
             'thesis_subject', 'name_of_org', 'expected_deliverables'
@@ -31,9 +33,10 @@ def get_supervisor_data(request):
         pending_applications_list = list(pending_applications_qs)
         # approved applications
         approved_applications_qs = PS2TSTransfer.objects.filter(
-            hod_email = current_user.email,
-            is_hod_approved = True
+            supervisor_email = current_user.email,
+            is_supervisor_approved = True,
         ).values(
+            'applicant__user__username',
             'applicant__user__first_name', 'applicant__user__last_name',
             'cgpa', 'thesis_locale', 'supervisor_email',
             'thesis_subject', 'name_of_org', 'expected_deliverables'
@@ -50,6 +53,7 @@ def get_supervisor_data(request):
 
         }
         attributes_for_display = [
+            {'display': 'Student ID', 'prop':'applicant__user__username'},
             {'display':'Student First Name','prop':'applicant__user__first_name'},
             {'display':'Student Last Name','prop':'applicant__user__last_name'},
             {'display':'CGPA','prop':'cgpa'},
@@ -76,7 +80,7 @@ def get_supervisor_data(request):
     return JsonResponse(response, safe=False)
 
 def approve_transfer_request(request):
-    applicant = request.GET['applicant__user__username']
+    applicant = request.GET['student_username']
     approved_by = request.user.userprofile.user_type
     saved = update_application(applicant, approved_by)
     response = {}
