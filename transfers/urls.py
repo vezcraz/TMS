@@ -22,12 +22,14 @@ urlpatterns = [
     path('supervisor/get-supervisor-data/', supervisor_views.get_supervisor_data),
     path('supervisor/approve-transfer-request/', supervisor_views.approve_transfer_request),
     # AD urls
-    path('assoc_dean/home/', assoc_dean_views.AssocDeanView.as_view()),
-    path('assoc-dean/home/type/<type>', assoc_dean_views.AssocDeanView.as_view()),
+    path('assoc-dean/home/', assoc_dean_views.AssocDeanHomeView.as_view()),
 ]
 
-# data related urls
+# data related urls (usually requested by ajax calls in already rendered templates)
 urlpatterns += [
-    path('data/get-application-data/', redirect_views.application_data_redirect_view),
-    path('data/approve-transfer-request/', redirect_views.approve_transfer_request_redirect_view),
+    # hod urls
+    path('data/hod/get-application-data/', redirect_views.application_data_redirect_view),
+    path('data/hod/approve-transfer-request/', redirect_views.approve_transfer_request_redirect_view),
+    # AD urls
+    path('data/assoc-dean/get-transfer-lists/type/<type>/', assoc_dean_views.AssocDeanLisApplicationstView.as_view()),
 ]
