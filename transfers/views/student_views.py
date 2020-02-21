@@ -3,11 +3,11 @@ from django.views import generic
 from django.http import JsonResponse
 from django.shortcuts import redirect
 
-from transfers.constants import CampusType, UserType
+from transfers.constants import CampusType, UserType, TransferType
 from transfers.models import PS2TSTransfer, UserProfile
 from transfers.forms import PS2TSTransferForm, TS2PSTransferForm
 
-from transfers.utils import get_application_status, notify_ps2ts, notify_ts2ps
+from transfers.utils import get_application_status, notify_ps2ts, notify_ts2ps, get_deadline_status
 
 
 class StudentDashboardView(generic.TemplateView):
@@ -63,6 +63,8 @@ class PS2TSFormView(generic.FormView):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
+        if not get_deadline_status(TransferType.PS2TS.value):
+            return redirect('/TMS/student/dashboard/')
         post = request.POST.copy()
         post['applicant'] = request.user.userprofile
         request.POST = post
@@ -115,6 +117,8 @@ class TS2PSFormView(generic.FormView):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
+        if not get_deadline_status(TransferType.TS2PS.value):
+            return redirect('/TMS/student/dashboard/')
         post = request.POST.copy()
         post['applicant'] = request.user.userprofile
         request.POST = post

@@ -1,8 +1,8 @@
 from django.core.mail import send_mail
-
 from .constants import UserType, TransferType
-from .models import PS2TSTransfer, TS2PSTransfer
-
+from django.http import JsonResponse
+from .models import PS2TSTransfer, TS2PSTransfer, DeadlineModel
+from django.utils import timezone as datetime
 
 def get_application_status(userprofile):
     status = None
@@ -115,3 +115,37 @@ def fetch_ts2ps_list():
     # converting QuerySet --> List
     ts2ps_list = list(ts2ps_qs)
     return ts2ps_list
+
+def get_deadline_status(form_type):
+    try:
+        update_psd = DeadlineModel.objects.all().first()
+    except:
+        update_psd = DeadlineModel.objects.create()
+    status = False
+    if(form_type == TransferType.PS2TS.value):
+        if datetime.datetime.now() < update_psd.deadline_PS2TS:
+            update_psd.is_active_PS2TS = True
+            status = True
+        else:
+            update_psd.is_active_PS2TS = False
+            status = False
+    else:
+        if datetime.now() < update_psd.deadline_TS2PS:
+            update_psd.is_active_TS2PS = True
+            status = True
+        else:
+            update_psd.is_active_TS2PS = False
+            status = False
+    update_psd.save()
+    return status
+
+def update_psd_data(form):
+    try:
+        update_psd = DeadlineModel.objects.all().first()
+    except:
+        update_psd = DeadlineModel.objects.create()
+    update_psd.deadline_PS2TS = form.cleaned_data.get('deadline_PS2TS')
+    update_psd.deadline_TS2PS = form.cleaned_data.get('deadline_TS2PS')
+    update_psd.message = form.cleaned_data.get('message')
+    update_psd.is_active_PS2TS = form.cleaned_data.get('is_active_PS2TS')
+    update_psd.is_active_TS2PS = form.cleaned_data.get('is_active_PS2TS')

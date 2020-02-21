@@ -2,7 +2,7 @@ from django.urls import path
 from django.conf.urls import url
 
 from transfers.views import (redirect_views, student_views,
-    hod_views, supervisor_views, assoc_dean_views)
+    hod_views, supervisor_views, assoc_dean_views, psd_views)
 
 
 # view related urls
@@ -23,6 +23,8 @@ urlpatterns = [
     path('supervisor/approve-transfer-request/', supervisor_views.approve_transfer_request),
     # AD urls
     path('assoc-dean/home/', assoc_dean_views.AssocDeanHomeView.as_view()),
+    # psd urls
+    path('psd/dashboard/', psd_views.PSDview.as_view()),
 ]
 
 # data related urls (usually requested by ajax calls in already rendered templates)

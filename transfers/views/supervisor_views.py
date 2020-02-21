@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import generic
+from transfers.models import PS2TSTransfer
 
 from transfers.constants import UserType, CampusType
 from transfers.models import PS2TSTransfer, UserProfile
