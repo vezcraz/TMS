@@ -20,7 +20,7 @@ def get_application_status(userprofile):
         elif ts2ps.count() == 1:
             alias = TransferType.TS2PS.value
             has_applied = 1
-            status = _get_ts2ps_application_status(userprofile. ts2ps)
+            status = _get_ts2ps_application_status(userprofile, ts2ps)
             error = 0
         else:
             status = -1
@@ -125,7 +125,7 @@ def get_deadline_status(form_type):
         update_psd = DeadlineModel.objects.create()
     status = False
     if(form_type == TransferType.PS2TS.value):
-        if datetime.datetime.now() < update_psd.deadline_PS2TS:
+        if datetime.now() < update_psd.deadline_PS2TS:
             update_psd.is_active_PS2TS = True
             status = True
         else:
@@ -151,3 +151,4 @@ def update_psd_data(form):
     update_psd.message = form.cleaned_data.get('message')
     update_psd.is_active_PS2TS = form.cleaned_data.get('is_active_PS2TS')
     update_psd.is_active_TS2PS = form.cleaned_data.get('is_active_PS2TS')
+    update_psd.save()

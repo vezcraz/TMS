@@ -4,11 +4,12 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'TMS.settings')
 import django
 
 django.setup()
-from transfers.models import UserProfile, PS2TSTransfer, TS2PSTransfer
+from transfers.models import UserProfile, PS2TSTransfer, TS2PSTransfer, DeadlineModel
 
 from django.contrib.auth.models import User
 
 import random
+from django.utils import timezone as datetime
 
 # choices
 campus_choices = [0, 1, 2]
@@ -41,6 +42,13 @@ def create_super_user():
     except:
         print("Error occurred while creating super user")
 
+    try:
+        (deadline, created) = DeadlineModel.objects.get_or_create(deadline_PS2TS = datetime.now(), deadline_TS2PS = datetime.now())
+        deadline.save()
+        print("Deadline created")
+
+    except:
+        print("Error occured while creating deadlines")
 
 def create_user(n):
     for i in range(n):

@@ -20,7 +20,7 @@ class PSDview(generic.TemplateView):
         get_deadline_status(TransferType.PS2TS.value)
         get_deadline_status(TransferType.TS2PS.value)
 
-        form = self.form_class(initial=self.initial)
+        form = self.form_class(instance=DeadlineModel.objects.all().first())
         self.context = {
             'form': form
         }
@@ -34,7 +34,7 @@ class PSDview(generic.TemplateView):
         }
         return render(request, self.template_name, self.context)
 
-def get_PSD_data(self, request, *args, **kwargs):
+def get_PSD_data(request, *args, **kwargs):
     response = {}
     try:
         DeadlineModel.objects.first().deadline_PS2TS
