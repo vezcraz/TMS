@@ -25,6 +25,7 @@ urlpatterns = [
     path('assoc-dean/home/', assoc_dean_views.AssocDeanHomeView.as_view()),
     # psd urls
     path('psd/dashboard/', psd_views.PSDview.as_view()),
+    path('psd/get-PSD-data/', psd_views.get_PSD_data),
 ]
 
 # data related urls (usually requested by ajax calls in already rendered templates)
