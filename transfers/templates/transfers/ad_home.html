@@ -1,43 +1,102 @@
 {% extends 'transfers/website_base.html' %}
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+<div class="container-fluid site-section" id="mainContent">    
+    <div class="row px-0 d-flex justify-content-center shadow col-md-12 text-center" id="intro">	    
+      <div class="col-md-4 m-0 pt-2 container-fluid"> 
 
-<div class="row" id="mainContent">
-    
-    <!--
-		Not applied
-    -->
-    <div class="table-light shadow site-section col-md-12 text-center" id="intro">	   
-
-      <br>    
       <h1 class="text-dark"> Transfer Management System </h1>
-      <p class="text-dark" style="font-size: 22px"> Please Select the Category of Forms : </p>
-      <div class="btn-group btn p-0 mt-2" id="typeOfPage">
+    </div>
+    <div class="col-md-6">
+     
+      <div class="btn-group btn p-0 " id="typeOfPage">
+       
+           <br>   
           <div class="btn-group-toggle btn" id="type" data-toggle="buttons">
-          	<label class="btn btn-primary m-2 rounded-1" style="font-size: 20px">
-          		<input type="radio" name="type" id="0" value="0" autocomplete="off">PS To TS Requests
-      		  </label>         
-            <label class="btn btn-secondary m-2 rounded-1" style="font-size: 20px">  
-          		<input type="radio" name="type" id="1" value="1" autocomplete="off">TS To PS Requests
-            </label>
+              <p class="text-dark h5"> Please Select the Category of Forms : </p>
+          	
+          		<button type="radio" class="btn btn-primary btn-lg m-3" @click="showTS2PS=false, init=true, type_val=0; getTS2PSdata();" name="type" id="1" value="0" autocomplete="off">PS To TS Requests
+              </button>
+      	        
+            
+          		<button class="btn btn-secondary btn-lg m-3" @click="showTS2PS=true, init=true, type_val=1; getTS2PSdata();" type="radio" name="type" id="1" value="1" autocomplete="off">TS To PS Requests</button>
+           
           </div>
       </div>    
     </div>
+  </div>
 
-    <div class="table-responsive shadow">
-      <table class="table text-center table-stripped table-hover ">
-        <br>
-        <h2 id="heading" class="text-center text-dark"></h2>
-        <br>
-        <thead id="table-head">
-          
+    <div class="container mt-3 table-striped text-center table-responsive shadow">
+      <div v-if="!init" class="site-section">
+        <span class="text-center bg-light mt-5 py-4 h3"><i>Please Select the Category of Froms From Above.</i></span>
+      </div>
+      <table v-if="showTS2PS == false & init" class="table text-center table-striped table-hover ">
+        <br v-if="showTS2PS == false & init">
+        <h2 v-if="showTS2PS == false & init" id="heading" class="text-center text-dark">Status of PS to TS Transfer Requests</h2>
+        <br v-if="showTS2PS == false & init">
+        <thead v-if="showTS2PS==false & init" id="table-head">
+          <tr> <th>College ID</th><th>Name</th><th>Supervisor</th><th>HoD</th></tr>                     
         </thead>
-        <tbody class="text-center" id="table-body">
+        <tbody v-if="showTS2PS == false" class="text-center" id="table-body">
+          <tr  v-for="data in data_all" data-toggle="modal" data-id="0" data-target="#applicationModal" @click="modal_student=data">
+            <td>${data.applicant__user__username}</td>
+            <td>${data.applicant__user__first_name} ${data.applicant__user__last_name}</td> 
+            <td>${data.is_supervisor_approved}</td>          
+            <td>${data.is_hod_approved}</td>
+          </tr>
+        </tbody>
+      </table>
+      <table v-if="showTS2PS == true & init" class="table text-center table-striped table-hover ">
+        <br v-if="showTS2PS == true & init">
+        <h2 v-if="showTS2PS == true & init" id="heading" class="text-center text-dark">Status of TS to PS Transfer Requests</h2>
+        <br v-if="showTS2PS == true & init">
+        <thead v-if="showTS2PS==true & init" id="table-head">
+          <tr><th>College ID</th><th>Name</th><th>HoD</th></tr>                   
+        </thead>
+        
+        <tbody v-if="showTS2PS==true & init" class="text-center" id="table-body">
 
-
+        <tr v-for="data in data_all" data-toggle="modal" data-id="1" data-target="#applicationModal" @click="modal_student=data">
+          <td>${data.applicant__user__username}</td>
+          <td>${data.applicant__user__first_name} ${data.applicant__user__last_name}</td>           
+          <td>${data.is_hod_approved}</td>
+        </tr>
         </tbody>
 
       </table>
-    </div>	
+
+      <div class="modal fade" id="applicationModal" tabindex="-1" role="dialog" >
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">                                     
+              <h3 class="text-dark modal-title">Transfer Request</h3>          
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div> 
+            <div class="modal-body">
+             <table>
+              <tr v-if="showTS2PS==false" v-for="attr in modal_student_ps2ts_attr">
+                  <td class="text-left"><strong>${attr.display}</strong> </td>
+                  <td >${modal_student[attr.props]}</td>
+                </tr>
+             </table>
+             <table>
+              <tr v-if="showTS2PS==true" v-for="attr in modal_student_ts2ps_attr">
+                  <td class="text-left"><strong>${attr.display}</strong> </td>
+                  <td >${modal_student[attr.props]}</td>
+                </tr>
+             </table>
+            </div>              
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+          </div>
+           
+        </div>
+      </div>
+
+      </div>
+      	
 </div>
 
     
@@ -45,78 +104,61 @@
 <br>
 
 
-<script type="text/javascript">
+<script> 
+ var vm= new Vue({
+       delimiters : ['${', '}'],
+       el:"#mainContent",
+       data:
+       {
+        type_val:1,
+        data_all:[],
+        modal_student:{},
+        modal_student_ps2ts_attr:[{'props':'applicant__user__username','display':'College ID'},
+                            {'props':'applicant__user__last_name','display':'Last Name'},
+                            {'props':'applicant__user__first_name','display':'First Name'},
+                            {'props':'is_hod_approved','display':'HOD Approval Status'},
+                            {'props':'is_supervisor_approved','display':'Supervisor Approval Status'},
+                            {'props':'sub_type','display':'Subject Type'},
+                            {'props':'cgpa','display':'CGPA'},
+                            {'props':'thesis_locale','display':'Thesis Locale'},
+                            {'props':'supervisor_email','display':'Supervisor Email'},
+                            {'props':'thesis_subject','display':'Subject of Thesis'},
+                            {'props':'name_of_org','display':'Organization Name'},
+                            {'props':'expected_deliverables','display':'Expected Deliverables'},
+                            ],
+        modal_student_ts2ps_attr:[{'props':'applicant__user__username','display':'College ID'},
+                            {'props':'applicant__user__last_name','display':'Last Name'},
+                            {'props':'applicant__user__first_name','display':'First Name'},
+                            {'props':'is_hod_approved','display':'HOD Approval Status'},          
+                            {'props':'sub_type','display':'Subject Type'},
+                            {'props':'cgpa','display':'CGPA'},
+                            {'props':'name_of_org','display':'Organization Name'},
+                            ],
+        showTS2PS:true,
+        init:false,       
 
-    function getData(type)
-  	{
-		  var type_val=type;
-      console.log(type_val);
-	    $.ajax({
-	      url: '/TMS/data/assoc-dean/get-transfer-lists/type/'+type_val+'/',
-	      type:'GET',
-	      success: function(response)
-	      {
-	        $('#table-body').html('');
-	        $('#table-head').html('');
-          $('#heading').html('');
-	        var len=response.length;
-	      	console.log(len);
-	        if(type_val == 0)
-	        {  
-            $('#heading').html('Status of PS to TS Transfer Requests');
-				    var head="<tr> <th>College ID</th><th>Name</th><th>Supervisor</th><th>HoD</th></tr>"
-				    $('#table-head').html(head);
+       },
 
-  				if(len==0)
-  				{
-  					var entry="<tr><td colspan=4> <h3>No Applications</h3></td></tr>";
-  					$('#table-body').append(entry);
-  				}
+       methods:
+       {        
+        getTS2PSdata()
+        {
+          console.log(this.type_val);
+          axios.get('/TMS/data/assoc-dean/get-transfer-lists/type/'+this.type_val+'/')
+          .then(response=>
+          {
+            this.data_all=response.data;
+          })
+        },
+      },
+       mounted()
+       {            
+          this.getTS2PSdata();                             
+       },
 
-  				for(var i=0;i<len;i++)
-  				{					
-  					var id = response[i].applicant__user__username;
-  					var name = response[i].applicant__user__first_name + response[i].applicant__user__last_name;
-            var hod = response[i].is_hod_approved;
-            var sup = response[i].is_supervisor_approved;
-  					var entry="<tr><td>"+id+"</td><td>"+name+"</td><td>"+sup+"</td><td>"+hod+"</td></tr>";
-  					$('#table-body').append(entry);
-  				}
 
-	        }
-	        else if(type_val==1)
-	        {
-            $('#heading').html('Status of TS to PS Transfer Requests');
-				    var head="<tr> <th>College ID</th><th>Name</th><th>HoD</th></tr>"
-				    $('#table-head').html(head);
-
-    				if(len==0)
-    				{
-    					var entry="<tr><td colspan=3> <h3>No Applications</h3></td></tr>";
-    					$('#table-body').append(entry);
-    				}
-
-    				for(var i=0;i<len;i++)
-    				{					
-    					var id = response[i].applicant__user__username;
-    					var name = response[i].applicant__user__first_name + response[i].applicant__user__last_name;
-              var hod = response[i].is_hod_approved;
-    					var entry="<tr><td>"+id+"</td><td>"+name+"</td><td>"+hod+"</td></tr>";
-    					$('#table-body').append(entry);
-    				}
-	        }         
-
-	      }
-	    });
-	}
-  $(document).ready(function(){
-    $('#heading').html('<i><h4>Select The Type of Requests</h4></i>');
-  });
-  $('#type :input').change(function(){
-  var type=$("input:radio[name='type']:checked").val();
-  getData(type);
-  });
-</script>
+     })
+  </script>
 
 
 
@@ -147,4 +189,81 @@ table
 </style>
 
 
+
 {% endblock %}
+
+
+<!-- 
+<script type="text/javascript">    
+    
+
+    function getData(type)
+    {
+      var type_val=type;
+      //console.log(type_val);  
+      
+      $.ajax({
+        url: '/TMS/data/assoc-dean/get-transfer-lists/type/'+type_val+'/',
+        type:'GET',
+        success: function(response)
+        {
+          $('#table-body').html('');
+          $('#table-head').html('');
+          $('#heading').html('');
+          var len=response.length;
+          //console.log(len);
+          if(type_val == 0)
+          {  
+            $('#heading').html('Status of PS to TS Transfer Requests');
+            var head="<tr> <th>College ID</th><th>Name</th><th>Supervisor</th><th>HoD</th></tr>"
+            $('#table-head').html(head);
+
+          if(len==0)
+          {
+            var entry="<tr><td colspan=4> <h3>No Applications</h3></td></tr>";
+            $('#table-body').append(entry);
+          }
+
+          for(var i=0;i<len;i++)
+          {         
+            var id = response[i].applicant__user__username;
+            var name = response[i].applicant__user__first_name + response[i].applicant__user__last_name;
+            var hod = response[i].is_hod_approved;
+            var sup = response[i].is_supervisor_approved;
+            var entry="<tr data-toggle=modal data-id=1 data-target=#applicationModal><td>"+id+"</td><td>"+name+"</td><td>"+sup+"</td><td>"+hod+"</td></tr>";
+            $('#table-body').append(entry);
+          }
+
+          }
+          else if(type_val==1)
+          {
+            $('#heading').html('Status of TS to PS Transfer Requests');
+            var head="<tr> <th>College ID</th><th>Name</th><th>HoD</th></tr>"
+            $('#table-head').html(head);
+
+            if(len==0)
+            {
+              var entry="<tr><td colspan=3> <h3>No Applications</h3></td></tr>";
+              $('#table-body').append(entry);
+            }
+
+            for(var i=0;i<len;i++)
+            {         
+              var id = response[i].applicant__user__username;
+              var name = response[i].applicant__user__first_name + response[i].applicant__user__last_name;
+              var hod = response[i].is_hod_approved;
+              var entry="<tr data-toggle="+"modal"+" data-id="+id+" data-target="+"#applicationModal"+"><td>"+id+"</td><td>"+name+"</td><td>"+hod+"</td></tr>";              
+              $('#table-body').append(entry);
+            }
+          }         
+
+        }
+
+      });             
+
+    }
+
+</script>
+
+
+ -->

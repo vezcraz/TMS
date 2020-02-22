@@ -98,7 +98,8 @@ def fetch_ps2ts_list():
         'applicant__user__username',
         'applicant__user__first_name', 'applicant__user__last_name',
         'sub_type', 'is_supervisor_approved',
-        'is_hod_approved'
+        'is_hod_approved', 'cgpa', 'thesis_locale', 'supervisor_email',
+            'thesis_subject', 'name_of_org', 'expected_deliverables'
     )
     # converting QuerySet --> List
     ps2ts_list = list(ps2ts_qs)
@@ -110,7 +111,8 @@ def fetch_ts2ps_list():
     ts2ps_qs = TS2PSTransfer.objects.values(
         'applicant__user__username',
         'applicant__user__first_name', 'applicant__user__last_name',
-        'sub_type', 'is_hod_approved'
+        'sub_type', 'is_hod_approved', 'cgpa', 
+            'reason_for_transfer', 'name_of_org', 
     )
     # converting QuerySet --> List
     ts2ps_list = list(ts2ps_qs)
