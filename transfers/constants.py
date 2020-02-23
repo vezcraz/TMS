@@ -24,3 +24,9 @@ class ApplicationsStatus(enum.Enum):
     PENDING = 0
     APPROVED = 1
     REJECTED = 2
+
+
+class ThesisLocaleType(enum.Enum):
+    ON_CAMPUS = 0
+    OFF_CAMPUS_INDIA = 1
+    OFF_CAMPUS_ABROAD = 2

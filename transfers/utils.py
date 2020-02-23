@@ -1,5 +1,5 @@
 from django.core.mail import send_mail
-from .constants import UserType, TransferType
+from .constants import UserType, TransferType, ThesisLocaleType, ApplicationsStatus
 from django.http import JsonResponse
 from .models import PS2TSTransfer, TS2PSTransfer, DeadlineModel
 from django.utils import timezone as datetime
@@ -165,3 +165,18 @@ def update_psd_data(form):
     update_psd.is_active_PS2TS = form.cleaned_data.get('is_active_PS2TS')
     update_psd.is_active_TS2PS = form.cleaned_data.get('is_active_TS2PS')
     update_psd.save()
+
+def clean_list(application_list):
+    for data in application_list:
+        try:
+            data['thesis_locale_alias'] = ThesisLocaleType._member_names_[data.pop('thesis_locale')]
+            if 'is_supervisor_approved' in data:
+                status_alias = ApplicationsStatus._member_names_[data.pop('is_supervisor_approved')]
+                data['status'] = status_alias
+            elif 'is_hod_approved' in data:
+                status_alias = ApplicationsStatus._member_names_[data.pop('is_hod_approved')]
+                data['status'] = status_alias
+        except Exception as e:
+            print('ERROR OCCURED!')
+            print(e)
+    return application_list

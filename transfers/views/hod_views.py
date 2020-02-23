@@ -2,9 +2,9 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import generic
 
-from transfers.constants import UserType, CampusType
-from transfers.models import PS2TSTransfer, UserProfile, ApplicationsStatus
-from transfers.utils import update_application
+from transfers.constants import UserType, CampusType, ApplicationsStatus
+from transfers.models import PS2TSTransfer, UserProfile
+from transfers.utils import update_application, clean_list
 
 
 class HODHomeView(generic.TemplateView):
@@ -36,6 +36,8 @@ def get_hod_data(request):
             'is_hod_approved',
         )
         pending_applications_list = list(pending_applications_qs)
+        pending_applications_list = clean_list(pending_applications_list)
+        approved_applications_list = clean_list(approved_applications_list)
         # approved applications
         approved_applications_qs = PS2TSTransfer.objects.filter(
             hod_email = current_user.email,
@@ -56,7 +58,6 @@ def get_hod_data(request):
             'designation': current_user_alias,
             'campus': campus_alias,
             'email': current_user.email
-
         }
         attributes_for_display = [
             {'display': 'Student ID', 'prop':'applicant__user__username'},
@@ -64,11 +65,11 @@ def get_hod_data(request):
             {'display':'Student Last Name','prop':'applicant__user__last_name'},
             {'display':'CGPA','prop':'cgpa'},
             {'display': 'Supervisor (on-campus)', 'prop':'supervisor_email'},
-            {'display':'Thesis Location','prop':'thesis_locale'},
+            {'display':'Thesis Location','prop':'thesis_locale_alias'},
             {'display':'Thesis Subject','prop':'thesis_subject'},
             {'display':'Organisation','prop':'name_of_org'},
             {'display':'Expected Deliverables','prop':'expected_deliverables'},
-            {'display':'Status', 'prop':'is_hod_approved'}
+            {'display':'Status', 'prop':'status'}
         ]
         response['data']['student_pending_attributes'] = attributes_for_display[:-1]
         response['data']['student_approved_attributes'] = attributes_for_display
@@ -80,7 +81,6 @@ def get_hod_data(request):
             'designation': current_user_alias,
             'campus': campus_alias,
             'email': current_user.email
-
         }
         response['error'] = True
         response['message'] = 'error'

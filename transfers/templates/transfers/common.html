@@ -67,7 +67,7 @@
         <label class="switch m-auto">
             
               <input class="switch-input"  v-model="showApproved" type="checkbox" />
-              <span class="switch-label"  data-on="Aprooved Requests" data-off="Pending Requests"></span> 
+              <span class="switch-label"  data-on="Submitted Requests" data-off="Pending Requests"></span> 
               <span class="switch-handle"></span> 
           </label>
 
@@ -102,7 +102,7 @@
 
         <!-- Approved Requests-->
           
-        <div v-if="showApproved" v-for="student in data_approved" id="pending-card" v-bind:class="{'table-success' :student.status === 'Approved', 'table-danger':student.status === 'Rejected'}" class=" container-fluid rounded m-2 col-md-3">
+        <div v-if="showApproved" v-for="student in data_approved" id="pending-card" v-bind:class="{'table-success' :student.status === 'APPROVED', 'table-danger':student.status === 'REJECTED'}" class=" container-fluid rounded m-2 col-md-3">
             
               <div @click="modal_student=student, modal_student_attr=student_approved_attributes" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
                   <table  id="student-details-table" class="table mt-2">
@@ -229,7 +229,7 @@
              
               if(response.error)
               {
-                alert('Error Approving this request, Contact Adminstrator', response.message);
+                alert('Error fetching data, Contact Adminstrator', response.message);
               }
               else
               {
