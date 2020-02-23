@@ -91,7 +91,7 @@
               </div>
               <div class="text-center d-flex justify-content-around align-items-center">
                   <button @click="submitRequest(student,1)" class="btn btn-sm  btn-outline-success text-dark text-center mb-2">Approve Request</button>
-                  <button @click="submitRequest(student,0)" class=" ml-2 btn btn-sm  btn-outline-danger text-dark text-center mb-2">Reject Request</button>
+                  <button @click="submitRequest(student,2)" class=" ml-2 btn btn-sm  btn-outline-danger text-dark text-center mb-2">Reject Request</button>
   
               </div>
           
@@ -102,16 +102,17 @@
 
         <!-- Approved Requests-->
           
-        <div v-if="showApproved" v-for="student in data_approved" id="pending-card"  class=" container-fluid rounded m-2 col-md-3">
+        <div v-if="showApproved" v-for="student in data_approved" id="pending-card" v-bind:class="{'table-success' :student.status === 'Approved', 'table-danger':student.status === 'Rejected'}" class=" container-fluid rounded m-2 col-md-3">
             
-          <div @click="modal_student=student, modal_student_attr=student_approved_attributes" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
-              <table  id="student-details-table" class="table mt-2">
-                <tr v-for="attr in student_approved_attributes">
-                  <td class="text-left" id="text-overflow"><strong>${attr.display}</strong> </td>
-                  <td id="text-overflow" >${student[attr.prop]}</td>
-                </tr>
-              </table>
-          </div>
+              <div @click="modal_student=student, modal_student_attr=student_approved_attributes" data-toggle="modal" data-target="#applicationDetailsModal" id="student-details" >
+                  <table  id="student-details-table" class="table mt-2">
+                    <tr v-for="attr in student_approved_attributes">
+                      <td class="text-left" id="text-overflow"><strong>${attr.display}</strong> </td>
+                      <td id="text-overflow" >${student[attr.prop]}</td>
+                    </tr>
+                  </table>
+              </div>
+        
         </div>
 
         <img v-if="loading" src="{% static 'transfers/images/loading.gif' %}" class="img " alt="Page Loading...">
@@ -138,7 +139,7 @@
               <table  id="student-details-modal-table" class="table mt-2">
                 <tr v-for="attr in modal_student_attr">
                   <td class="text-left"><strong>${attr.display}</strong> </td>
-                  <td >${modal_student[attr.prop]}</td>
+                  <td>${modal_student[attr.prop]}</td>
                 </tr>
               </table>
              
@@ -235,9 +236,15 @@
                 
                 
                 this.data_pending=response.data.data_pending;
+                
                 this.data_approved=response.data.data_approved;
-                console.log(this.data_approved)
+                
               
+
+                
+                
+                console.log(this.data_approved)
+                
                 this.student_pending_attributes=response.data.student_pending_attributes;
                 this.student_approved_attributes=response.data.student_approved_attributes;
                 console.log(this.student_approved_attributes)  
@@ -249,6 +256,21 @@
               {
               this.loading=false
             })
+         },
+         convertData(data) // Not required
+         {
+          for(index=0;index<data.length; )
+                {
+                  if(data[index].is_supervisor_approved)
+                    {
+                      if(data[index].is_supervisor_approved==2)
+                      data[index].status="Rejected";
+                      if(data.is_supervisor_approved==1)
+                      data[index].status="Approved";
+
+                    }
+                }
+                return data;
          },
          submitRequest(stud,status)
          {  

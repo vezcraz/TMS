@@ -4,7 +4,7 @@ from django.views import generic
 from transfers.models import PS2TSTransfer
 
 from transfers.constants import UserType, CampusType
-from transfers.models import PS2TSTransfer, UserProfile
+from transfers.models import PS2TSTransfer, UserProfile, ApplicationsStatus
 from transfers.utils import update_application
 
 
@@ -24,7 +24,7 @@ def get_supervisor_data(request):
         # applications where approval is pending
         pending_applications_qs = PS2TSTransfer.objects.filter(
             supervisor_email = current_user.email,
-            is_supervisor_approved = False,
+            is_supervisor_approved = ApplicationsStatus.PENDING.value,
         ).values(
             'applicant__user__username',
             'applicant__user__first_name', 'applicant__user__last_name',
@@ -35,12 +35,13 @@ def get_supervisor_data(request):
         # approved applications
         approved_applications_qs = PS2TSTransfer.objects.filter(
             supervisor_email = current_user.email,
-            is_supervisor_approved = True,
+            is_supervisor_approved__gt=ApplicationsStatus.PENDING.value,
         ).values(
             'applicant__user__username',
             'applicant__user__first_name', 'applicant__user__last_name',
             'cgpa', 'thesis_locale', 'supervisor_email',
-            'thesis_subject', 'name_of_org', 'expected_deliverables'
+            'thesis_subject', 'name_of_org', 'expected_deliverables',
+            'is_supervisor_approved',
         )
         approved_applications_list = list(approved_applications_qs)
         response['error'] = False
@@ -63,8 +64,9 @@ def get_supervisor_data(request):
             {'display':'Thesis Subject','prop':'thesis_subject'},
             {'display':'Organisation','prop':'name_of_org'},
             {'display':'Expected Deliverables','prop':'expected_deliverables'},
+            {'display': 'Status', 'prop':'is_supervisor_approved'},
         ]
-        response['data']['student_pending_attributes'] = attributes_for_display
+        response['data']['student_pending_attributes'] = attributes_for_display[:-1]
         response['data']['student_approved_attributes'] = attributes_for_display
         response['data']['data_pending'] = [a for a in pending_applications_list]
         response['data']['data_approved']= [a for a in approved_applications_list]
@@ -84,7 +86,7 @@ def approve_transfer_request(request):
     applicant = request.GET['student_username']
     status = request.GET['status']
     approved_by = request.user.userprofile.user_type
-    saved = update_application(applicant, approved_by)
+    saved = update_application(applicant, approved_by, status)
     response = {}
     if saved:
         response['error'] = False

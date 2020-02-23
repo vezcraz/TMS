@@ -66,6 +66,11 @@ class PS2TSTransfer(models.Model):
         (OFF_CAMPUS_INDIA, 'Off Campus (India)'),
         (OFF_CAMPUS_ABROAD, 'Off Campus Abroad'),
     ]
+    status_choices = [
+        (ApplicationsStatus.PENDING.value, 'Pending'),
+        (ApplicationsStatus.APPROVED.value, 'Approved'),
+        (ApplicationsStatus.REJECTED.value, 'Rejected'),
+    ]
     # linking the application with its applicant
     applicant = models.OneToOneField(UserProfile, primary_key=True,
         on_delete=models.CASCADE)
@@ -84,8 +89,14 @@ class PS2TSTransfer(models.Model):
         help_text='Name of BITS Campus or Organization where thesis will be carried')
     expected_deliverables = models.TextField(help_text='Expected outcome of thesis')
     # fields to note the status of the application
-    is_supervisor_approved = models.IntegerField(default=ApplicationsStatus.PENDING.value)
-    is_hod_approved = models.IntegerField(default=ApplicationsStatus.PENDING.value)
+    is_supervisor_approved = models.IntegerField(
+        default=ApplicationsStatus.PENDING.value,
+        choices=status_choices
+    )
+    is_hod_approved = models.IntegerField(
+        default=ApplicationsStatus.PENDING.value,
+        choices=status_choices
+    )
 
     class Meta:
         verbose_name = 'PS to TS Application'
@@ -104,6 +115,11 @@ class TS2PSTransfer(models.Model):
         (PSTS2PSPS, 'PS-TS to PS-PS (Dual Degree)'),
         (TSTS2TSPS, 'TS-TS to TS-PS (Dual Degree)'),
         ]
+    status_choices = [
+        (ApplicationsStatus.PENDING.value, 'Pending'),
+        (ApplicationsStatus.APPROVED.value, 'Approved'),
+        (ApplicationsStatus.REJECTED.value, 'Rejected'),
+    ]
     # linking application with its applicant
     applicant = models.OneToOneField(UserProfile, primary_key=True,
         on_delete=models.CASCADE)
@@ -117,7 +133,10 @@ class TS2PSTransfer(models.Model):
     name_of_org = models.CharField(max_length=100,
             help_text='Name of BITS Campus or Organization where thesis was being carried')
     # field to note the status of the application
-    is_hod_approved = models.IntegerField(default=ApplicationsStatus.PENDING.value)
+    is_hod_approved = models.IntegerField(
+        default=ApplicationsStatus.PENDING.value,
+        choices=status_choices
+    )
 
     class Meta:
         verbose_name = 'TS to PS Application'
