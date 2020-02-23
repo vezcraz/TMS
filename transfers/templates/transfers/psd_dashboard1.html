@@ -143,11 +143,13 @@
 		
 		<div class="col-lg-4 col-md-6 form-container rounded mt-5 pt-5 table-info" style="-webkit-box-shadow: -1px 4px 16px 5px;">
 			
-			<form @submit="submitForm(this)" >
+			<form @submit="submitForm(this)"  method="POST">
+
+			{% csrf_token %}
 				<div class="form-group table-warning p-2 text-center m-2 rounded" style="-webkit-box-shadow: -1px 4px 16px 5px;">
 					<label style="font-weight: bold;">PS to TS </label> 
 				    <center><div class="onoffswitch" >
-                       	<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" v-model="isPStoTS">
+                       	<input type="checkbox" name="is_active_PS2TS" class="onoffswitch-checkbox" id="myonoffswitch" v-model="isPStoTS">
   						<label class="onoffswitch-label" for="myonoffswitch">
         				<span class="onoffswitch-inner"></span>
         				<span class="onoffswitch-switch"></span>
@@ -158,14 +160,14 @@
 					<div v-show="isPStoTS">
 						<label class="control-label mt-5" for="date"><b>Select Deadline</b></label>
 						
-						   <center><input id="input" width="312" /></center>
+						   <center><input id="input" width="312" v-model="PS2TSdate" name="deadline_PS2TS"/></center>
 					</div>
       			
 				</div><br><br>
 				<div class="form-group table-warning p-2 text-center m-2 rounded" style="-webkit-box-shadow: -1px 4px 16px 5px;">
 					<label><b>TS to PS</b> </label> 
 				<center><div class="onoffswitch">
-                       	<input type="checkbox" name="onoffswitch2" class="onoffswitch-checkbox" id="myonoffswitch2" v-model="isTStoPS">
+                       	<input type="checkbox"  name="is_active_TS2PS" class="onoffswitch-checkbox" id="myonoffswitch2" v-model="isTStoPS">
   						<label class="onoffswitch-label" for="myonoffswitch2">
         				<span class="onoffswitch-inner"></span>
         				<span class="onoffswitch-switch"></span>
@@ -178,19 +180,19 @@
 					<div v-show="isTStoPS">
 						<label class="control-label mt-5" for="date2"><b>Select Deadline</b></label>
 						
-						<center><input id="input2" width="312" /></center>
+						<center><input id="input2" width="312" v-model="TS2PSdate" name="deadline_TS2PS"/></center>
 					</div>
 				
 				</div><br><br>
 				
 				<div class="table-warning text-center p-2 m-2 rounded" >
 					Student Dashboard Instructions
-					<textarea v-model="instructions" class="rounded input-group" rows="3">
+					<textarea v-model="instructions" name="message" class="rounded input-group" rows="3">
 
 					</textarea>
 				</div>
 				<div class="text-center p-2">
-					<button type="submit" class="btn text-center btn-success" >Update</button>
+					<button type="submit" class="btn text-center btn-success"  >Update</button>
 				</div>
 			</form>
 
@@ -215,6 +217,18 @@
 	   },
 	   mounted()
 	   {
+		   if("{{form.is_active_PS2TS.value}}" == "True"){
+		   		this.isPStoTS=true;
+		   } else {
+		   		this.isPStoTS=false;
+		   }
+			if("{{form.is_active_TS2PS.value}}" == "True"){
+		   		this.isTStoPS=true;
+		   } else {
+			   this.isTStoPS=false;
+		   }
+			this.TS2PSdate = "{{form.deadline_TS2PS.value}}";
+			this.PS2TSdate = "{{form.deadline_PS2TS.value}}";
 		var date_input=$('input[name="date"]'); //our date input has the name "date"
      	 var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
      	 var options={
@@ -229,8 +243,9 @@
 	   {
 			submitForm(fm)
 			{
-				var data=fm.data;
-				axios.post('/TMS/psd/formSubmit',fm.data)
+				var data={'deadline_PS2TS':this.PS2TSdate,"deadline_TS2PS":this.TS2PSdate,"is_active_PS2TS":this.isPStoTS,"is_active_TS2PS":this.isTStoPS,"message":this.instructions};
+				
+				axios.get('/TMS/data/psd/get-data/',data)
          		 .then(response=>
          		 {
 					if(response.error==false)
@@ -242,6 +257,10 @@
 						alert('Error submitting Form');
 					}
           		})
+				.catch(e =>
+				{
+					alert('Error'+e);
+				})
          
 			}
 	   }

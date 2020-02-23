@@ -5,4 +5,42 @@
 {% block content %}
 
 
+<div class="container">
+    <div class="row form-container-row">
+        <div class="col-md-8 shadow table-light rounded box" style="margin: 100px auto 20px auto; padding: 50px 0;">
+            <h2 class="text-center">PSD Form Control</h2>
+            <div class="row form-row">
+                <div class="col" style="margin: 0 auto; max-width: 500px;">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-dark">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#id_is_active_PS2TS").change(function () {
+        if($('#id_is_active_PS2TS').is(':checked')){
+            $("#div_id_deadline_PS2TS").show();
+        } else {
+            $("#div_id_deadline_PS2TS").hide();
+        }
+    });
+    $("#id_is_active_TS2PS").change(function () {
+        if($('#id_is_active_TS2PS').is(':checked')){
+            $("#div_id_deadline_TS2PS").show();
+        } else {
+            $("#div_id_deadline_TS2PS").hide();
+        }
+    });
+
+</script>
+
 {% endblock %}

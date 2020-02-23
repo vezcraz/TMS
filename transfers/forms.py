@@ -25,11 +25,11 @@ class TS2PSTransferForm(forms.ModelForm):
 class PSDForm(forms.ModelForm):
     class Meta:
         model = DeadlineModel
-        fields = ['deadline_PS2TS', 'is_active_PS2TS','deadline_TS2PS', 'is_active_TS2PS', 'message']
+        fields = ['is_active_PS2TS', 'deadline_PS2TS', 'is_active_TS2PS', 'deadline_TS2PS', 'message']
         labels = {
-            'deadline_PS2TS' : 'Deadline Date and Time',
-            'is_active_PS2TS' : 'Enable/Disable',
-            'deadline_TS2PS' : 'Deadline Date and Time',
-            'is_active_TS2PS' : 'Enable/Disable',
+            'is_active_PS2TS' : 'Enable PS2TS Form',
+            'deadline_PS2TS' : 'PS2TS Deadline Date and Time',
+            'is_active_TS2PS' : 'Enable TS2PS Form',
+            'deadline_TS2PS' : 'TS2PS Deadline Date and Time',
             'message': 'Message to be Displayed'
         }

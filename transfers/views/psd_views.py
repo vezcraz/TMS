@@ -19,7 +19,6 @@ class PSDview(generic.TemplateView):
         # To update is_active fields
         get_deadline_status(TransferType.PS2TS.value)
         get_deadline_status(TransferType.TS2PS.value)
-
         form = self.form_class(instance=DeadlineModel.objects.all().first())
         self.context = {
             'form': form
@@ -28,11 +27,31 @@ class PSDview(generic.TemplateView):
         
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
-        update_psd_data(form)
+        if form.is_valid():
+            update_psd_data(form)
+
+        # To update is_active fields
+        get_deadline_status(TransferType.PS2TS.value)
+        get_deadline_status(TransferType.TS2PS.value)
+        form = self.form_class(instance=DeadlineModel.objects.all().first())
         self.context = {
-            'form'  : form
+            'form': form
         }
         return render(request, self.template_name, self.context)
+
+def get_form_data(request, *args, **kwargs):
+    template_name = 'transfers/psd_dashboard.html'
+    form = PSDForm(request.POST)
+    if form.is_valid():
+        update_psd_data(form)
+    # To update is_active fields
+    get_deadline_status(TransferType.PS2TS.value)
+    get_deadline_status(TransferType.TS2PS.value)
+    form = PSDForm(instance=DeadlineModel.objects.all().first())
+    context = {
+        'form'  : form
+    }
+    return render(request, template_name, context)
 
 def get_PSD_data(request, *args, **kwargs):
     response = {}
