@@ -19,13 +19,15 @@ def login_redirect_view(request):
             return redirect('/TMS/hod/home/')
         elif user_type == UserType.AD.value:
             return redirect('/TMS/assoc-dean/home/')
+        elif user_type == UserType.PSD.value:
+            return redirect('/TMS/psd/dashboard/')
 
 def application_data_redirect_view(request):
     if request.user.is_anonymous:
         return redirect('/TMS/login/')
     else:
         if request.user.is_superuser:
-            return redirect('/TMS/psd/dashboard')
+            return redirect('/TMS-admin/')
         user_type = request.user.userprofile.user_type
         if user_type == UserType.HOD.value:
             return redirect('/TMS/hod/get-hod-data/')
