@@ -178,5 +178,5 @@ def clean_list(application_list):
                 data['status'] = status_alias
         except Exception as e:
             print('ERROR OCCURED!')
-            print(e)
+            print(e) # left for debugging
     return application_list
