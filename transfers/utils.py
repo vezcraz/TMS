@@ -84,15 +84,18 @@ def update_application(applicant, approved_by, status):
         if approved_by == UserType.SUPERVISOR.value:
             transfer_form.is_supervisor_approved = int(status)
             print(int(status))
-        else:
+        elif approved_by == UserType.HOD.value:
             transfer_form.is_hod_approved = int(status)
             print(int(status))
+        elif approved_by == UserType.AD.value:
+            transfer_form.is_supervisor_approved = int(status)
+            transfer_form.is_hod_approved = int(status)
         transfer_form.save()
         return True
     except Exception as e:
         print(e) # left for debugging
         return False
-
+            
 def fetch_ps2ts_list():
     ps2ts = PS2TSTransfer.objects.all().order_by('applicant.user.username')
     # fetching PS2TS data

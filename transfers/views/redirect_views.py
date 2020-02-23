@@ -53,3 +53,20 @@ def approve_transfer_request_redirect_view(request):
             return redirect(url)
         else:
             return redirect('/TMS/login-redirect/')
+
+def reject_transfer_request_redirect_view(request):
+    if request.user.is_anonymous:
+        return redirect('/TMS/login/')
+    else:
+        student_username = request.GET.get('student_username')
+        if request.user.is_superuser:
+            return redirect('/TMS-admin/')
+        user_type = request.user.userprofile.user_type
+        if user_type == UserType.HOD.value:
+            return redirect('/TMS/hod/home/')
+        elif user_type == UserType.SUPERVISOR.value:
+            return redirect('/TMS/supervisor/home/')
+        elif user_type == UserType.AD.value:
+            return redirect('/TMS/assoc-dean/reject-transfer-request?student_username='+student_username)
+        else:
+            return redirect('/TMS/login-redirect/')
