@@ -36,14 +36,15 @@ def get_application_status(userprofile):
 def _get_ps2ts_application_status(userprofile, ps2ts):
     application = ps2ts[0]
     # until both supervisor and hod approves the application, the status remains 0
-    if not application.is_supervisor_approved or not application.is_hod_approved:
+    if application.is_supervisor_approved == ApplicationsStatus.REJECTED.value or \
+        application.is_hod_approved == Application.REJECTED.value:
         return 0
     else:
         return 1
 
 def _get_ts2ps_application_status(userprofile, ts2ps):
     application = ts2ps[0]
-    if not application.is_hod_approved:
+    if application.is_hod_approved == Application.REJECTED.value:
         return 0
     else:
         return 1
