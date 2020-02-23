@@ -23,6 +23,7 @@ urlpatterns = [
     path('supervisor/approve-transfer-request/', supervisor_views.approve_transfer_request),
     # AD urls
     path('assoc-dean/home/', assoc_dean_views.AssocDeanHomeView.as_view()),
+    path('assoc-dean/reject-transfer-request/',assoc_dean_views.reject_transfer_request),
     # psd urls
     path('psd/dashboard/', psd_views.PSDview.as_view()),
     path('psd/get-PSD-data/', psd_views.get_PSD_data),
@@ -39,4 +40,5 @@ urlpatterns += [
     path('data/assoc-dean/get-transfer-lists/type/<type>/', assoc_dean_views.AssocDeanLisApplicationstView.as_view()),
     # psd urls
     path('data/psd/get-data/', psd_views.get_form_data),
+    path('data/reject-transfer-request/', redirect_views.reject_transfer_request_redirect_view),
 ]
