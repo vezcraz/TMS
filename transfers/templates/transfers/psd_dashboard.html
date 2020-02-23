@@ -26,6 +26,17 @@
 
 <script>
 
+    if($('#id_is_active_PS2TS').is(':checked')){
+        $("#div_id_deadline_PS2TS").show();
+    } else {
+        $("#div_id_deadline_PS2TS").hide();
+    }
+    if($('#id_is_active_TS2PS').is(':checked')){
+        $("#div_id_deadline_TS2PS").show();
+    } else {
+        $("#div_id_deadline_TS2PS").hide();
+    }
+
     $("#id_is_active_PS2TS").change(function () {
         if($('#id_is_active_PS2TS').is(':checked')){
             $("#div_id_deadline_PS2TS").show();
