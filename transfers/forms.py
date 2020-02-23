@@ -1,4 +1,5 @@
 from django import forms
+from tempus_dominus.widgets import DateTimePicker
 from .models import PS2TSTransfer, TS2PSTransfer, UserProfile, DeadlineModel
 
 class PS2TSTransferForm(forms.ModelForm):
@@ -26,6 +27,20 @@ class TS2PSTransferForm(forms.ModelForm):
         }
 
 class PSDForm(forms.ModelForm):
+    deadline_PS2TS = forms.DateTimeField(
+        widget=DateTimePicker(
+            attrs={
+                'append': 'fa fa-calendar'
+            }
+        )
+    )
+    deadline_TS2PS = forms.DateTimeField(
+        widget=DateTimePicker(
+            attrs={
+                'append': 'fa fa-calendar'
+            }
+        )
+    )
     class Meta:
         model = DeadlineModel
         fields = ['is_active_PS2TS', 'deadline_PS2TS', 'is_active_TS2PS', 'deadline_TS2PS', 'message']
