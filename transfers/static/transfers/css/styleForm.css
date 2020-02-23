@@ -29,7 +29,7 @@ html body {
     margin: 0;
 }
 
-.textinput, .select, .textarea, .emailinput, .numberinput{
+.textinput, .select, .textarea, .emailinput, .numberinput, .datetimeinput{
     padding: 3px 10px;
     width: 100%;
     font-size: 0.9rem;
@@ -46,4 +46,8 @@ html body {
 
 .verification-col p{
     margin: 0;
+}
+
+label{
+    margin-bottom: 0 !important;
 }

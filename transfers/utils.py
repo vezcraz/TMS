@@ -126,17 +126,25 @@ def get_deadline_status(form_type):
     except:
         update_psd = DeadlineModel.objects.create()
     status = False
-    if(form_type == TransferType.PS2TS.value):
-        if datetime.now() < update_psd.deadline_PS2TS:
-            update_psd.is_active_PS2TS = True
-            status = True
+    if form_type == TransferType.PS2TS.value:
+        if update_psd.is_active_PS2TS:
+            if datetime.now() < update_psd.deadline_PS2TS:
+                update_psd.is_active_PS2TS = True
+                status = True
+            else:
+                update_psd.is_active_PS2TS = False
+                status = False
         else:
             update_psd.is_active_PS2TS = False
             status = False
     else:
-        if datetime.now() < update_psd.deadline_TS2PS:
-            update_psd.is_active_TS2PS = True
-            status = True
+        if update_psd.is_active_TS2PS:
+            if datetime.now() < update_psd.deadline_TS2PS:
+                update_psd.is_active_TS2PS = True
+                status = True
+            else:
+                update_psd.is_active_TS2PS = False
+                status = False
         else:
             update_psd.is_active_TS2PS = False
             status = False
@@ -152,5 +160,5 @@ def update_psd_data(form):
     update_psd.deadline_TS2PS = form.cleaned_data.get('deadline_TS2PS')
     update_psd.message = form.cleaned_data.get('message')
     update_psd.is_active_PS2TS = form.cleaned_data.get('is_active_PS2TS')
-    update_psd.is_active_TS2PS = form.cleaned_data.get('is_active_PS2TS')
+    update_psd.is_active_TS2PS = form.cleaned_data.get('is_active_TS2PS')
     update_psd.save()
