@@ -2,7 +2,7 @@ from django.urls import path
 from django.conf.urls import url
 
 from transfers.views import (redirect_views, student_views,
-    hod_views, supervisor_views, assoc_dean_views, psd_views)
+    hod_views, supervisor_views, assoc_dean_views, psd_views, fillUser)
 
 
 # view related urls
@@ -26,6 +26,8 @@ urlpatterns = [
     # psd urls
     path('psd/dashboard/', psd_views.PSDview.as_view()),
     path('psd/get-PSD-data/', psd_views.get_PSD_data),
+    path('fill',fillUser.fill),
+
 ]
 
 # data related urls (usually requested by ajax calls in already rendered templates)
