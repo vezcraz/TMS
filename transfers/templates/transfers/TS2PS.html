@@ -12,6 +12,36 @@
                 <div class="col" style="margin: 0 auto; max-width: 500px;">
                     <form action="" method="post">
                         {% csrf_token %}
+
+
+                        {% comment %} Form Header {% endcomment %}
+                        <div id="div_id_name" class="control-group">
+                            <label for="id_name" class="control-label requiredField">
+                                Name<span class="asteriskField">*</span>
+                            </label>
+                            <div class="controls">
+                                <input type="text" name="name" class="numberinput" required id="id_name" value="{{student_name}}" disabled readonly>
+                            </div>
+                        </div>
+                        <div id="div_id_ID" class="control-group">
+                            <label for="id_ID" class="control-label requiredField">
+                                ID<span class="asteriskField">*</span>
+                            </label>
+                            <div class="controls">
+                                <input type="text" name="ID" class="numberinput" required id="id_ID" value="{{student_ID}}" disabled readonly>
+                            </div>
+                        </div>
+                        <div id="div_id_branch" class="control-group">
+                            <label for="id_branch" class="control-label requiredField">
+                                Branch<span class="asteriskField">*</span>
+                            </label>
+                            <div class="controls">
+                                <input type="text" name="branch" class="numberinput" required id="id_branch" value="{{student_branch}}" disabled readonly>
+                            </div>
+                        </div>
+
+
+                        {{ form.contact|as_crispy_field }}
                         <div id="div_id_hod_email" class="control-group">
                             <label for="id_hod_email" class="control-label requiredField">
                                 HOD Email<span class="asteriskField">*</span>
@@ -39,4 +69,7 @@
     </div>
 </div>
 
+<script>
+    $('#id_contact').val('{{contact}}')
+</script>
 {% endblock %}

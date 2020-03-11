@@ -2,24 +2,27 @@ from django import forms
 from .models import PS2TSTransfer, TS2PSTransfer, UserProfile, DeadlineModel
 
 class PS2TSTransferForm(forms.ModelForm):
+    contact = forms.CharField(max_length=20, label="Phone Number", required=True)
     class Meta:  
         model = PS2TSTransfer  
-        fields = ['applicant', 'supervisor_email', 'hod_email', 'sub_type', 'cgpa', 'thesis_locale', 'thesis_subject', 'name_of_org', 'expected_deliverables']
+        fields = ['contact', 'applicant', 'supervisor_email', 'hod_email', 'sub_type', 'cgpa', 'thesis_locale', 'thesis_subject', 'name_of_org', 'expected_deliverables']
         labels = {
+            "supervisor_email": "Supervisor/co-supervisor Email",
             "hod_email": "HOD Email",
             "cgpa": "CGPA",
-            "name_of_org": "Name of Organization"
+            "name_of_org": "Name of Institute/Organization"
         }
 
 
 class TS2PSTransferForm(forms.ModelForm):
+    contact = forms.CharField(max_length=20, label="Phone Number", required=True)
     class Meta:  
         model = TS2PSTransfer  
-        fields = ['applicant', 'hod_email', 'sub_type', 'cgpa', 'reason_for_transfer', 'name_of_org']
+        fields = ['contact', 'applicant', 'hod_email', 'sub_type', 'cgpa', 'reason_for_transfer', 'name_of_org']
         labels = {
             "hod_email": "HOD Email",
             "cgpa": "CGPA",
-            "name_of_org": "Name of Organization"
+            "name_of_org": "Name of Institute/Organization"
         }
 
 class PSDForm(forms.ModelForm):
