@@ -178,3 +178,20 @@ def clean_list(application_list):
             print('ERROR OCCURED!')
             print(e) # left for debugging
     return application_list
+
+def get_branch_from_branch_code(branch_code):
+    switcher = {
+        'A1': 'B.E. Chemical Engineering',
+        'A3': 'B.E. Electrical and Electronics Engineering',
+        'A4': 'B.E. Mechanical Engineering',
+        'A7': 'B.E. Computer Science Engineering',
+        'A8': 'B.E. Electronics and Instrumentation Engineering',
+        'AA': 'B.E. Electronics and Communication Engineering',
+        'B1': 'M.Sc. Biology + ',
+        'B2': 'M.Sc. Chemistry + ',
+        'B3': 'M.Sc. Economics + ',
+        'B4': 'M.Sc. Mathematics + ',
+        'B5': 'M.Sc. Physics + ',
+        'PS': ''
+    }
+    return switcher.get(branch_code, "Invalid branch code")

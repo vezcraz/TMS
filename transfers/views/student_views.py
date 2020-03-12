@@ -7,7 +7,8 @@ from transfers.constants import CampusType, UserType, TransferType
 from transfers.models import PS2TSTransfer, UserProfile
 from transfers.forms import PS2TSTransferForm, TS2PSTransferForm
 
-from transfers.utils import get_application_status, notify_ps2ts, notify_ts2ps, get_deadline_status
+from transfers.utils import get_application_status, notify_ps2ts, notify_ts2ps, get_deadline_status, get_branch_from_branch_code
+import pandas as pd 
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -51,15 +52,14 @@ class PS2TSFormView(generic.FormView):
         form = self.form_class(initial=self.initial)
         # is supervisor email valid (present in DB)?
         invalid_supervisor_email = False
-        hod_email_qs = UserProfile.objects.filter(
-            user_type=UserType.HOD.value
-            ).filter(
-                campus = request.user.userprofile.campus
-            ).values_list(
-                'user__email', flat=True
-            )
-        hod_email_list = list(hod_email_qs)
+        hod_file = pd.read_csv('hod_list.csv')
+        hod_1 = hod_file[(hod_file["Campus"]==request.user.userprofile.campus) & ((hod_file["Department"]==request.user.username[4:6]) | (hod_file["Department"]==request.user.username[6:8]))]
+        hod_email_list = hod_1['Email'].tolist()
         self.context = {
+            'student_name': request.user.get_full_name(),
+            'student_ID': request.user.username,
+            'student_branch': get_branch_from_branch_code(request.user.username[4:6])+get_branch_from_branch_code(request.user.username[6:8]),
+            'contact': request.user.userprofile.contact,
             'form': form,
             'hod_email_list': hod_email_list,
             'invalid_supervisor_email': invalid_supervisor_email
@@ -80,20 +80,23 @@ class PS2TSFormView(generic.FormView):
             supervisor_email_qs = UserProfile.objects.filter(
                 user_type=UserType.SUPERVISOR.value, user__email=email)
             if supervisor_email_qs:
+                contact = form.cleaned_data.get('contact')
+                current_user = request.user.userprofile
+                current_user.contact = contact
+                current_user.save()
                 form.save()
                 notify_ps2ts(request)
                 return redirect('/TMS/student/dashboard/')
             else:
                 invalid_supervisor_email = True
-        hod_email_qs = UserProfile.objects.filter(
-            user_type=UserType.HOD.value
-            ).filter(
-                campus = request.user.userprofile.campus
-            ).values_list(
-                'user__email', flat=True
-            )
-        hod_email_list = list(hod_email_qs)
+        hod_file = pd.read_csv('hod_list.csv')
+        hod_1 = hod_file[(hod_file["Campus"]==request.user.userprofile.campus) & ((hod_file["Department"]==request.user.username[4:6]) | (hod_file["Department"]==request.user.username[6:8]))]
+        hod_email_list = hod_1['Email'].tolist()
         self.context = {
+            'student_name': request.user.get_full_name(),
+            'student_ID': request.user.username,
+            'student_branch': get_branch_from_branch_code(request.user.username[4:6])+get_branch_from_branch_code(request.user.username[6:8]),
+            'contact': request.user.userprofile.contact,
             'form': form,
             'hod_email_list': hod_email_list,
             'invalid_supervisor_email': invalid_supervisor_email
@@ -109,15 +112,17 @@ class TS2PSFormView(generic.FormView):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
-        hod_email_qs = UserProfile.objects.filter(
-            user_type=UserType.HOD.value
-            ).filter(
-                campus = request.user.userprofile.campus
-            ).values_list(
-                'user__email', flat=True
-            )
-        hod_email_list = list(hod_email_qs)
-        self.context = {'form': form, 'hod_email_list': hod_email_list}
+        hod_file = pd.read_csv('hod_list.csv')
+        hod_1 = hod_file[(hod_file["Campus"]==request.user.userprofile.campus) & ((hod_file["Department"]==request.user.username[4:6]) | (hod_file["Department"]==request.user.username[6:8]))]
+        hod_email_list = hod_1['Email'].tolist()
+        self.context = {
+            'student_name': request.user.get_full_name(),
+            'student_ID': request.user.username,
+            'student_branch': get_branch_from_branch_code(request.user.username[4:6])+get_branch_from_branch_code(request.user.username[6:8]),
+            'contact': request.user.userprofile.contact,
+            'form': form, 
+            'hod_email_list': hod_email_list
+        }
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
@@ -128,18 +133,24 @@ class TS2PSFormView(generic.FormView):
         request.POST = post
         form = self.form_class(request.POST)
         if form.is_valid():
+            contact = form.cleaned_data.get('contact')
+            current_user = request.user.userprofile
+            current_user.contact = contact
+            current_user.save()
             form.save()
             notify_ts2ps(request)
             return redirect('/TMS/student/dashboard/')
-        hod_email_qs = UserProfile.objects.filter(
-            user_type=UserType.HOD.value
-            ).filter(
-                campus = request.user.userprofile.campus
-            ).values_list(
-                'user__email', flat=True
-            )
-        hod_email_list = list(hod_email_qs)
-        self.context = {'form': form, 'hod_email_list': hod_email_list}
+        hod_file = pd.read_csv('hod_list.csv')
+        hod_1 = hod_file[(hod_file["Campus"]==request.user.userprofile.campus) & ((hod_file["Department"]==request.user.username[4:6]) | (hod_file["Department"]==request.user.username[6:8]))]
+        hod_email_list = hod_1['Email'].tolist()
+        self.context = {
+            'student_name': request.user.get_full_name(),
+            'student_ID': request.user.username,
+            'student_branch': get_branch_from_branch_code(request.user.username[4:6])+get_branch_from_branch_code(request.user.username[6:8]),
+            'contact': request.user.userprofile.contact,
+            'form': form, 
+            'hod_email_list': hod_email_list
+        }
         return render(request, self.template_name, self.context)
 
 

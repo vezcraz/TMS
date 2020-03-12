@@ -12,11 +12,41 @@
                 <div class="col" style="margin: 0 auto; max-width: 500px;">
                     <form action="" method="post">
                         {% csrf_token %}
+
+
+                        {% comment %} Form Header {% endcomment %}
+                        <div id="div_id_name" class="control-group">
+                            <label for="id_name" class="control-label requiredField">
+                                Name<span class="asteriskField">*</span>
+                            </label>
+                            <div class="controls">
+                                <input type="text" name="name" class="numberinput" required id="id_name" value="{{student_name}}" disabled readonly>
+                            </div>
+                        </div>
+                        <div id="div_id_ID" class="control-group">
+                            <label for="id_ID" class="control-label requiredField">
+                                ID<span class="asteriskField">*</span>
+                            </label>
+                            <div class="controls">
+                                <input type="text" name="ID" class="numberinput" required id="id_ID" value="{{student_ID}}" disabled readonly>
+                            </div>
+                        </div>
+                        <div id="div_id_branch" class="control-group">
+                            <label for="id_branch" class="control-label requiredField">
+                                Branch<span class="asteriskField">*</span>
+                            </label>
+                            <div class="controls">
+                                <input type="text" name="branch" class="numberinput" required id="id_branch" value="{{student_branch}}" disabled readonly>
+                            </div>
+                        </div>
+
+
+                        {{ form.contact|as_crispy_field }}
                         {{ form.supervisor_email|as_crispy_field }}
                         <div class="row control-group" style="padding: 0 30px 15px 30px;">
                             <div class="col-12">
                                 <div class="row text-center">
-                                    <p style="margin: 0;">Supervisor details: <spanid id="verification-info" style="color: red;"></span></p>
+                                    <p style="margin: 0;">Supervisor/co-supervisor details: <spanid id="verification-info" style="color: red;"></span></p>
                                 </div>
                             </div>
                             <div class="col-12">
@@ -52,6 +82,16 @@
                         {{ form.sub_type|as_crispy_field }}
                         {{ form.cgpa|as_crispy_field }}
                         {{ form.thesis_locale|as_crispy_field }}
+                        <div class="row control-group" style="padding: 0 30px 15px 30px;">
+                            <div class="col-12">
+                                <div class="row">
+                                    <p id="thesis_locale_warning" style="color: red; display: none;">
+                                        You are opting for Off Campus Industry, please make sure the industry is not already listed as a PS station.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
                         {{ form.thesis_subject|as_crispy_field }}
                         {{ form.name_of_org|as_crispy_field }}
                         {{ form.expected_deliverables|as_crispy_field }}
@@ -67,6 +107,7 @@
 </div>
 
 <script>
+    $('#id_contact').val('{{contact}}')
     if('{{ invalid_supervisor_email }}' == 'True'){
         $("#verification-info").html("Invalid Supervisor Email!");
     }
@@ -91,6 +132,13 @@
                 }
             }
         });
+    });
+    $('#id_thesis_locale').on('change', function() {
+        if(this.value == 3){
+            $('#thesis_locale_warning').show();
+        } else {
+            $('#thesis_locale_warning').hide();
+        }
     });
 </script>
 

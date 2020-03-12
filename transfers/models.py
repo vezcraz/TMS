@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .constants import CampusType, TransferType, UserType, ApplicationsStatus
+from .constants import CampusType, TransferType, UserType, ApplicationsStatus, ThesisLocaleType
 
 
 class UserProfile(models.Model):
@@ -51,20 +51,16 @@ class PS2TSTransfer(models.Model):
     Model to store the information for
     PS --> TS transfer related queries
     """
-    PS2TS = 0
-    OTHER = 1
     sub_type_choices = [
-        (PS2TS, 'PS to TS (Single Degree)'),
-        (OTHER, 'PS-TS/TS-PS to TS-TS (Dual Degree)'),
+        (TransferType.PS2TS.value, 'PS to TS (Single Degree)'),
+        (TransferType.TS2PS.value, 'PS-TS/TS-PS to TS-TS (Dual Degree)'),
     ]
 
-    ON_CAMPUS = 0
-    OFF_CAMPUS_INDIA = 1
-    OFF_CAMPUS_ABROAD = 2
     thesis_locale_choices = [
-        (ON_CAMPUS, 'On Campus'),
-        (OFF_CAMPUS_INDIA, 'Off Campus (India)'),
-        (OFF_CAMPUS_ABROAD, 'Off Campus Abroad'),
+        (ThesisLocaleType.ON_CAMPUS.value, 'On Campus'),
+        (ThesisLocaleType.OFF_CAMPUS_INDIA.value, 'Off Campus (India)'),
+        (ThesisLocaleType.OFF_CAMPUS_ABROAD.value, 'Off Campus (Abroad)'),
+        (ThesisLocaleType.OFF_CAMPUS_INDUSTRY.value, 'Off Campus (Industry)'),
     ]
     status_choices = [
         (ApplicationsStatus.PENDING.value, 'Pending'),

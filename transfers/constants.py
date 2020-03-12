@@ -30,3 +30,4 @@ class ThesisLocaleType(enum.Enum):
     ON_CAMPUS = 0
     OFF_CAMPUS_INDIA = 1
     OFF_CAMPUS_ABROAD = 2
+    OFF_CAMPUS_INDUSTRY = 3
