@@ -1,5 +1,8 @@
 # This file will contain utility functions that are not strictly related to a single user types and other places
 from transfers.constants import UserType, ApplicationsStatus, ThesisLocaleType
+from transfers.models import DeadlineModel
+from transfers.constants import TransferType
+from django.utils import timezone as datetime
 
 
 def update_application(applicant, approved_by, status):
