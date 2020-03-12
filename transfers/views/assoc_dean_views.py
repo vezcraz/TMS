@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect
 
 from transfers.constants import TransferType, ApplicationsStatus
 from transfers.models import PS2TSTransfer, TS2PSTransfer
-from transfers.utils import fetch_ps2ts_list, fetch_ts2ps_list, update_application
+from transfers.utils.ad_utils import fetch_ps2ts_list, fetch_ts2ps_list
+from transfers.utils.shared_utils import update_application
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator

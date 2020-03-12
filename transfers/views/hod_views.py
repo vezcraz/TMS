@@ -4,7 +4,7 @@ from django.views import generic
 
 from transfers.constants import UserType, CampusType, ApplicationsStatus
 from transfers.models import PS2TSTransfer, UserProfile
-from transfers.utils import update_application, clean_list
+from transfers.utils.shared_utils import update_application, clean_list
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator

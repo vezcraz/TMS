@@ -7,7 +7,11 @@ from transfers.constants import CampusType, UserType, TransferType
 from transfers.models import PS2TSTransfer, UserProfile
 from transfers.forms import PS2TSTransferForm, TS2PSTransferForm
 
-from transfers.utils import get_application_status, notify_ps2ts, notify_ts2ps, get_deadline_status, get_branch_from_branch_code
+from transfers.utils.student_utils import (
+    get_application_status, notify_ps2ts, notify_ts2ps,
+    get_branch_from_branch_code
+)
+from transfers.utils.shared_utils import get_deadline_status
 import pandas as pd 
 
 from django.contrib.auth.decorators import login_required

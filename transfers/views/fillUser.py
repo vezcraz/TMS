@@ -8,8 +8,9 @@ from transfers.constants import CampusType, UserType, TransferType
 from transfers.models import PS2TSTransfer, UserProfile
 from transfers.forms import PS2TSTransferForm, TS2PSTransferForm
 
-from transfers.utils import get_application_status, notify_ps2ts, notify_ts2ps, get_deadline_status
 from transfers.tools.populate import populate
+
+
 def fill(request):
 	if request.method=='GET':
 		return render(request, 'transfers/fill.html')

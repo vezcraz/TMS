@@ -5,7 +5,8 @@ from transfers.constants import TransferType
  
 from transfers.models import DeadlineModel
  
-from transfers.utils import update_psd_data, get_deadline_status
+from transfers.utils.psd_utils import update_psd_data
+from transfers.utils.shared_utils import get_deadline_status
 from transfers.forms import PSDForm
 
 from django.contrib.auth.decorators import login_required
