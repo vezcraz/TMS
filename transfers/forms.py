@@ -32,22 +32,22 @@ class PSDForm(forms.ModelForm):
             attrs={
                 'append': 'fa fa-calendar'
             }
-        )
+        ),
+        label="PS2TS Deadline Date and Time"
     )
     deadline_TS2PS = forms.DateTimeField(
         widget=DateTimePicker(
             attrs={
                 'append': 'fa fa-calendar'
             }
-        )
+        ),
+        label="TS2PS Deadline Date and Time"
     )
     class Meta:
         model = DeadlineModel
         fields = ['is_active_PS2TS', 'deadline_PS2TS', 'is_active_TS2PS', 'deadline_TS2PS', 'message']
         labels = {
             'is_active_PS2TS' : 'Enable PS2TS Form',
-            'deadline_PS2TS' : 'PS2TS Deadline Date and Time',
             'is_active_TS2PS' : 'Enable TS2PS Form',
-            'deadline_TS2PS' : 'TS2PS Deadline Date and Time',
             'message': 'Message to be Displayed'
         }
