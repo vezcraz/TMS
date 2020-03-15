@@ -27,8 +27,9 @@ urlpatterns = [
     # psd urls
     path('psd/dashboard/', psd_views.PSDview.as_view()),
     path('psd/get-PSD-data/', psd_views.get_PSD_data),
-    path('fill',fillUser.fill),
-    path('export',export_views.exp),
+    # FIXME: These two views should be inside psd_views
+    path('psd/populate-data/',fillUser.fill),
+    path('psd/download-transfers/',export_views.exp),
 ]
 
 # data related urls (usually requested by ajax calls in already rendered templates)
@@ -41,6 +42,4 @@ urlpatterns += [
     # psd urls
     path('data/psd/get-data/', psd_views.get_form_data),
     path('data/reject-transfer-request/', redirect_views.reject_transfer_request_redirect_view),
-    # path('psd/populate-data/', psd_views.populate_data),
-    # path('psd/download-transfers/', psd_views.download_transfers),
 ]
