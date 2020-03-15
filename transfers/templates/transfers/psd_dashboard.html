@@ -10,14 +10,41 @@
 <div class="container">
     <div class="row form-container-row">
         <div class="col-md-8 shadow table-light rounded box" style="margin: 100px auto 20px auto; padding: 50px 0;">
-            <h2 class="text-center">PSD Form Control</h2>
             <div class="row form-row">
                 <div class="col" style="margin: 0 auto; max-width: 500px;">
+                    <div class="d-flex justify-content-around m-4">
+                        <div class="text-center">
+                            <a class="btn btn-dark" role="button" href="/TMS/psd/populate-data">Populate Database</a>
+                        </div>
+                        <div class="text-center">
+                            <a class="btn btn-dark" role="button" href="/TMS/psd/download-transfers/">Download Transfers</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <h2 class="text-center m-4">Transfer Form Controls</h2>
                     <form action="" method="post">
                         {% csrf_token %}
-                        {{form|crispy}}
+                        <div id="div_id_is_active_PS2TS" class="control-group">
+                            <div class="controls">
+                                <label for="id_is_active_PS2TS" class="checkbox d-flex justify-content-between">
+                                    <strong>Enable PS2TS Form</strong>
+                                    <input type="checkbox" name="is_active_PS2TS" class="checkboxinput" id="id_is_active_PS2TS" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="small">
+                                </label>
+                            </div>
+                        </div>
+                        {{ form.deadline_PS2TS|as_crispy_field }}
+                        <div id="div_id_is_active_TS2PS" class="control-group">
+                            <div class="controls">
+                                <label for="id_is_active_TS2PS" class="checkbox d-flex justify-content-between">
+                                    <strong>Enable TS2PS Form</strong>
+                                    <input type="checkbox" name="is_active_TS2PS" class="checkboxinput" id="id_is_active_TS2PS" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="small">
+                                </label>
+                            </div>
+                        </div>
+                        {{ form.deadline_TS2PS|as_crispy_field }}
+                        {{ form.message|as_crispy_field }}
                         <div class="text-center">
-                            <button type="submit" class="btn btn-dark">Submit</button>
+                            <button type="submit" class="btn btn-dark">Update</button>
                         </div>
                     </form>
                 </div>
@@ -27,33 +54,36 @@
 </div>
 
 <script>
-
+    if("{{form.is_active_PS2TS.value}}"=="True"){
+        $('#id_is_active_PS2TS').bootstrapToggle('on');
+    }
+    if("{{form.is_active_TS2PS.value}}"=="True"){
+        $('#id_is_active_TS2PS').bootstrapToggle('on');
+    }
     if($('#id_is_active_PS2TS').is(':checked')){
-        $("#div_id_deadline_PS2TS").show();
+        $("#div_id_deadline_PS2TS").show(150);
     } else {
-        $("#div_id_deadline_PS2TS").hide();
+        $("#div_id_deadline_PS2TS").hide(150);
     }
     if($('#id_is_active_TS2PS').is(':checked')){
-        $("#div_id_deadline_TS2PS").show();
+        $("#div_id_deadline_TS2PS").show(150);
     } else {
-        $("#div_id_deadline_TS2PS").hide();
+        $("#div_id_deadline_TS2PS").hide(150);
     }
-
     $("#id_is_active_PS2TS").change(function () {
         if($('#id_is_active_PS2TS').is(':checked')){
-            $("#div_id_deadline_PS2TS").show();
+            $("#div_id_deadline_PS2TS").show(150);
         } else {
-            $("#div_id_deadline_PS2TS").hide();
+            $("#div_id_deadline_PS2TS").hide(150);
         }
     });
     $("#id_is_active_TS2PS").change(function () {
         if($('#id_is_active_TS2PS').is(':checked')){
-            $("#div_id_deadline_TS2PS").show();
+            $("#div_id_deadline_TS2PS").show(150);
         } else {
-            $("#div_id_deadline_TS2PS").hide();
+            $("#div_id_deadline_TS2PS").hide(150);
         }
     });
-
 </script>
 
 {% endblock %}

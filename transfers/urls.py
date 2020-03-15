@@ -41,4 +41,6 @@ urlpatterns += [
     # psd urls
     path('data/psd/get-data/', psd_views.get_form_data),
     path('data/reject-transfer-request/', redirect_views.reject_transfer_request_redirect_view),
+    # path('psd/populate-data/', psd_views.populate_data),
+    # path('psd/download-transfers/', psd_views.download_transfers),
 ]
