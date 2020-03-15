@@ -93,10 +93,17 @@ class PS2TSTransfer(models.Model):
         default=ApplicationsStatus.PENDING.value,
         choices=status_choices
     )
+    # comments from authorities
+    comments_from_supervisor = models.TextField()
+    comments_from_hod = models.TextField()
+    comments_from_ad = models.TextField()
+    # date-time-stamp
+    application_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'PS to TS Application'
         verbose_name_plural = 'PS to TS Applications'
+
 
 class TS2PSTransfer(models.Model):
     """
@@ -133,10 +140,16 @@ class TS2PSTransfer(models.Model):
         default=ApplicationsStatus.PENDING.value,
         choices=status_choices
     )
+    # comments from authorities
+    comments_from_hod = models.TextField()
+    comments_from_ad = models.TextField()
+    # date-time-stamp
+    application_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'TS to PS Application'
         verbose_name_plural = 'TS to PS Applications'
+
 
 class DeadlineModel(models.Model):
  
