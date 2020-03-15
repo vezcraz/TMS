@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div >
+			<h2 >Export</h2>
+			<div >
+				<form method="post" >
+					{% csrf_token %}
+						<legend ></legend>
+						
+						
+						<select name="type" >
+							<option disabled selected>Select Type</option>
+							<option value="1">PS to TS</option>
+							<option value="2">TS to PS</option>
+							<option value="3">PS-TS/TS-PS to TS-TS</option>
+							<option value="4">PS-TS to PS-PS</option>
+							<option value="5">TS-TS to TS-PS</option>
+						</select>
+
+								<br><br>
+								
+								
+							
+							<p></p>
+							<div>
+								<button type="submit">Submit</button>
+							</div>
+						</form>
+					</div>
+						
+	
+			</div>
+
+</body>
+</html>
