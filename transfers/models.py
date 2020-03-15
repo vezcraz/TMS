@@ -94,9 +94,9 @@ class PS2TSTransfer(models.Model):
         choices=status_choices
     )
     # comments from authorities
-    comments_from_supervisor = models.TextField()
-    comments_from_hod = models.TextField()
-    comments_from_ad = models.TextField()
+    comments_from_supervisor = models.TextField(null=True, blank=True)
+    comments_from_hod = models.TextField(null=True, blank=True)
+    comments_from_ad = models.TextField(null=True, blank=True)
     # date-time-stamp
     application_date = models.DateTimeField(auto_now_add=True)
 
@@ -141,8 +141,8 @@ class TS2PSTransfer(models.Model):
         choices=status_choices
     )
     # comments from authorities
-    comments_from_hod = models.TextField()
-    comments_from_ad = models.TextField()
+    comments_from_hod = models.TextField(null=True, blank=True)
+    comments_from_ad = models.TextField(null=True, blank=True)
     # date-time-stamp
     application_date = models.DateTimeField(auto_now_add=True)
 
