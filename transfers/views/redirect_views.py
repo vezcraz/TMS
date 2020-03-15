@@ -22,6 +22,7 @@ def login_redirect_view(request):
         elif user_type == UserType.PSD.value:
             return redirect('/TMS/psd/dashboard/')
 
+
 def application_data_redirect_view(request):
     if request.user.is_anonymous:
         return redirect('/TMS/login/')
@@ -35,6 +36,7 @@ def application_data_redirect_view(request):
             return redirect('/TMS/supervisor/get-supervisor-data/')
         else:
             return redirect('/TMS/login-redirect/')
+
 
 def approve_transfer_request_redirect_view(request):
     if request.user.is_anonymous:
@@ -53,6 +55,7 @@ def approve_transfer_request_redirect_view(request):
             return redirect(url)
         else:
             return redirect('/TMS/login-redirect/')
+
 
 def reject_transfer_request_redirect_view(request):
     if request.user.is_anonymous:

@@ -42,7 +42,6 @@ def get_hod_data(request):
         )
         pending_applications_list = list(pending_applications_qs)
         pending_applications_list = clean_list(pending_applications_list)
-        approved_applications_list = clean_list(approved_applications_list)
         # approved applications
         approved_applications_qs = PS2TSTransfer.objects.filter(
             hod_email = current_user.email,
@@ -55,6 +54,7 @@ def get_hod_data(request):
             'thesis_subject', 'name_of_org', 'expected_deliverables'
         )
         approved_applications_list = list(approved_applications_qs)
+        approved_applications_list = clean_list(approved_applications_list)
         response['error'] = False
         response['message'] = 'success'
         response['data'] = {}

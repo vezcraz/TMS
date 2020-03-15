@@ -15,9 +15,9 @@ class TransferType(enum.Enum):
 
 
 class CampusType(enum.Enum):
-	GOA = 0
-	HYD = 1
-	PILANI = 2
+    GOA = 0
+    HYD = 1
+    PILANI = 2
 
 
 class ApplicationsStatus(enum.Enum):
