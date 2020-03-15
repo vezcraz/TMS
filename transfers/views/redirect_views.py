@@ -1,7 +1,7 @@
 # from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
-from transfers.constants import UserType
+from transfers.constants import UserType, TransferType
 
 
 def login_redirect_view(request):
@@ -30,10 +30,13 @@ def application_data_redirect_view(request):
         if request.user.is_superuser:
             return redirect('/TMS-admin/')
         user_type = request.user.userprofile.user_type
+        # application_type = request.GET.get('application_type')
         if user_type == UserType.HOD.value:
             return redirect('/TMS/hod/get-hod-data/')
+            # return redirect('/TMS/hod/get-hod-data?application_type='+application_type)
         elif user_type == UserType.SUPERVISOR.value:
             return redirect('/TMS/supervisor/get-supervisor-data/')
+            # return redirect('/TMS/supervisor/get-supervisor-data?application_type='+application_type)
         else:
             return redirect('/TMS/login-redirect/')
 

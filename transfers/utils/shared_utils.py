@@ -5,9 +5,12 @@ from transfers.constants import TransferType
 from django.utils import timezone as datetime
 
 
-def update_application(applicant, approved_by, status):
+def update_application(applicant, application_type, approved_by, status):
     try:
-        transfer_form = PS2TSTransfer.objects.get(applicant__user__username=applicant)
+        if application_type == TransferType.TS2PS:
+            transfer_form = TS2PSTransfer.objects.get(applicant__user__username=applicant)
+        else:
+            transfer_form = PS2TSTransfer.objects.get(applicant__user__username=applicant)
         if approved_by == UserType.SUPERVISOR.value:
             transfer_form.is_supervisor_approved = int(status)
             print(int(status))
@@ -15,8 +18,11 @@ def update_application(applicant, approved_by, status):
             transfer_form.is_hod_approved = int(status)
             print(int(status))
         elif approved_by == UserType.AD.value:
-            transfer_form.is_supervisor_approved = int(status)
-            transfer_form.is_hod_approved = int(status)
+            if application_type == TransferType.TS2PS:    
+                transfer_form.is_hod_approved = int(status)
+            else:
+                transfer_form.is_supervisor_approved = int(status)
+                transfer_form.is_hod_approved = int(status)
         transfer_form.save()
         return True
     except Exception as e:
@@ -30,9 +36,13 @@ def clean_list(application_list):
             if 'is_supervisor_approved' in data:
                 status_alias = ApplicationsStatus._member_names_[data.pop('is_supervisor_approved')]
                 data['status'] = status_alias
+                print(status_alias)
+                print('OK 1')
             elif 'is_hod_approved' in data:
                 status_alias = ApplicationsStatus._member_names_[data.pop('is_hod_approved')]
                 data['status'] = status_alias
+                print(status_alias)
+                print('OK 2')
         except Exception as e:
             print('ERROR OCCURED!')
             print(e) # left for debugging

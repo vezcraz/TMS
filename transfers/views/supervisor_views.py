@@ -94,7 +94,8 @@ def approve_transfer_request(request):
     applicant = request.GET['student_username']
     status = request.GET['status']
     approved_by = request.user.userprofile.user_type
-    saved = update_application(applicant, approved_by, status)
+    application_type = request.GET.get('application_type')
+    saved = update_application(applicant, application_type, approved_by, status)
     response = {}
     if saved:
         response['error'] = False
