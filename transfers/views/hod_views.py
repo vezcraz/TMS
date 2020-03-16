@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views import generic
 
 from transfers.constants import UserType, CampusType, ApplicationsStatus, TransferType
-from transfers.models import PS2TSTransfer, UserProfile
+from transfers.models import PS2TSTransfer, UserProfile, TS2PSTransfer
 from transfers.utils.shared_utils import update_application, clean_list
 
 from django.contrib.auth.decorators import login_required
@@ -29,8 +29,9 @@ def get_hod_data(request):
         current_user = request.user
         current_user_alias = 'Head Of Department'
         campus_alias = CampusType._member_names_[current_user.userprofile.campus]
-        print(request.GET.get('application_type'))
-        if request.GET.get('application_type') == TransferType.TS2PS:
+        # print(request.GET.get('application_type'))
+        application_type = int(request.GET.get('application_type'))
+        if application_type == TransferType.TS2PS.value:
             # applications where approval is pending
             pending_applications_qs = TS2PSTransfer.objects.filter(
                 hod_email = current_user.email,
@@ -44,7 +45,7 @@ def get_hod_data(request):
             pending_applications_list = list(pending_applications_qs)
             pending_applications_list = clean_list(pending_applications_list)
             # approved applications
-            approved_applications_qs = PS2TSTransfer.objects.filter(
+            approved_applications_qs = TS2PSTransfer.objects.filter(
                 hod_email = current_user.email,
                 is_hod_approved__gt = ApplicationsStatus.PENDING.value,
             ).values(
@@ -132,6 +133,7 @@ def get_hod_data(request):
             response['data']['data_pending'] = [a for a in pending_applications_list]
             response['data']['data_approved']= [a for a in approved_applications_list]
     except Exception as e:
+        print(e)
         response['data'] = {
             'username': current_user.username,
             'designation': current_user_alias,
@@ -148,7 +150,8 @@ def approve_transfer_request(request):
     applicant = request.GET['student_username']
     status = request.GET['status']
     approved_by = request.user.userprofile.user_type
-    application_type = request.GET.get('application_type')
+    print(request.GET)
+    application_type = int(request.GET.get('application_type'))
     saved = update_application(applicant, application_type, approved_by, status)
     response = {}
     if saved:
