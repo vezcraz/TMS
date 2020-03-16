@@ -59,14 +59,21 @@
             </ul>
           </div>
         </nav>
-        
+       
         <h3 v-if="isSupervisor" class="h3 text-center" style="line-height: 0.4; font-family: Georgia, 'Times New Roman', Times, serif;">
           PS TO TS Transfer Portal
         </h3>
+
         <div v-if="isHOD" class="text-center  ">
           <h3>Select Transfer Type</h3>
-          <button class="btn btn-outline-danger" @click="application_type=0, getData();"> PS to TS</button>
-          <button class="btn btn-outline-danger" @click="application_type=1, getData();"> TS to PS</button>
+          {% comment %} <button class="btn btn-outline-danger" @click="application_type=0, getData();"> PS to TS</button>
+          <button class="btn btn-outline-danger" @click="application_type=1, getData();"> TS to PS</button> {% endcomment %}
+            <label class="switch m-auto">
+            
+              <input class="switch-input" v-model="applicationTypeBoolean" type="checkbox" />
+              <span class="switch-label"  data-on="PS to TS Transfers" data-off="TS to PS Transfers"></span> 
+              <span class="switch-handle"></span> 
+          </label>
         </div>
 
         <hr>
@@ -229,7 +236,8 @@
          comments:"",
          isSupervisor:false,
          isHOD:false,
-         application_type:"",
+         application_type:0,
+         applicationTypeBoolean:true
           //data_pending:[{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'}],
          // student_pending_attributes:[{'display':'Student Name','prop':'name'},{'display':'CGPA','prop':'cgpa'},{'display':'Thesis Location','prop':'thesis_locale'},{'display':'Thesis Subject','prop':'thesis_subject'},{'display':'Organisation','prop':'name_of_org'},{'display':'Expected Deliverables','prop':'expected_deliverables'}],
           //data_approved:[{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'}],
@@ -237,6 +245,7 @@
         },
         mounted()
         {
+          
           this.user.usertype= {{request.user.userprofile.user_type}};
           this.user.usertype=parseInt(this.user.usertype);
           if(this.user.usertype == 2)
@@ -246,14 +255,25 @@
               this.isSupervisor=true;
               this.getData();
             }
-          console.log(this.user)
+        
+          this.getData();
          
          
         },
-       methods:
-       {
+        watch:
+        {
+          applicationTypeBoolean: function(x)
+          {
+            this.application_type=x?0:1;
+            this.getData();
+          }
+
+        },
+        methods:
+        {
          getData()
          {
+            this.loading=true;
             axios.get('/TMS/data/get-application-data/?application_type='+this.application_type)
             .then(response=>
             {
@@ -266,20 +286,9 @@
               }
               else
               {
-                
-                
+  
                 this.data_pending=response.data.data_pending;
-
-                
-                
-                this.data_approved=response.data.data_approved;
-                
-              
-
-                
-                
-               
-                
+                this.data_approved=response.data.data_approved;         
                 this.student_pending_attributes=response.data.student_pending_attributes;
                 this.student_approved_attributes=response.data.student_approved_attributes;
                
