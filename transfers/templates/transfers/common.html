@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.9">
-    <title>Supervisor Portal</title>
+    <title>Transfers Portal</title>
 
     <!-- Jquery CDN -->
     <script
@@ -42,6 +42,7 @@
             <span class="navbar-toggler-icon text-light"></span>
           </button>
         
+        
 
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto mr-2">
@@ -59,21 +60,29 @@
           </div>
         </nav>
         
-        <h3 class="h3 text-center" style="line-height: 0.4; font-family: Georgia, 'Times New Roman', Times, serif;">PS TO TS Transfer Portal</h3>
+        <h3 v-if="isSupervisor" class="h3 text-center" style="line-height: 0.4; font-family: Georgia, 'Times New Roman', Times, serif;">
+          PS TO TS Transfer Portal
+        </h3>
+        <div v-if="isHOD" class="text-center  ">
+          <h3>Select Transfer Type</h3>
+          <button class="btn btn-outline-danger" @click="application_type=0, getData();"> PS to TS</button>
+          <button class="btn btn-outline-danger" @click="application_type=1, getData();"> TS to PS</button>
+        </div>
+
         <hr>
         
       <section class="row col-md-5 pt-2  offset-md-4 container-fluid d-flex justify-content-center ">    
+     
         <i>Press to toggle requests</i>
         <label class="switch m-auto">
             
               <input class="switch-input"  v-model="showApproved" type="checkbox" />
-              <span class="switch-label"  data-on="Submitted Requests" data-off="Pending Requests"></span> 
+              <span class="switch-label"  data-on="Forwarded" data-off="Not-forwarded"></span> 
               <span class="switch-handle"></span> 
           </label>
-
-         
-    </section>
-    
+      </section>
+     
+      <div class="text-center"> <i>Click on a card to Forward/Reject a request</i></div>
        <section id="data-section" class="row mt-3 container-fluid d-flex justify-content-around ">
          
        
@@ -89,11 +98,7 @@
                     </tr>
                   </table>
               </div>
-              <div class="text-center d-flex justify-content-around align-items-center">
-                  <button @click="submitRequest(student,1)" class="btn btn-sm  btn-outline-success text-dark text-center mb-2">Approve Request</button>
-                  <button @click="submitRequest(student,2)" class=" ml-2 btn btn-sm  btn-outline-danger text-dark text-center mb-2">Reject Request</button>
-  
-              </div>
+            
           
         
            
@@ -135,17 +140,31 @@
               </button>
             </div>
             <div class="modal-body ">
-
+           
               <table  id="student-details-modal-table" class="table mt-2">
                 <tr v-for="attr in modal_student_attr">
                   <td class="text-left"><strong>${attr.display}</strong> </td>
                   <td>${modal_student[attr.prop]}</td>
                 </tr>
+                <tr v-if="!showApproved" >
+                  
+                  <form>
+                  <td colspan="2"><textarea class="form-control" v-model="comments" rows="3" cols="4" placeholder="Enter Comments Here"></textarea></td>
+                  </form>
+                  
+                </tr>
               </table>
+              <div v-if="!showApproved" class="text-center d-flex justify-content-around align-items-center">
+                  
+                  <button @click="submitRequest(modal_student,1)" class="btn btn-sm  btn-outline-success text-dark text-center mb-2">Recommend Request</button>
+                  <button @click="submitRequest(modal_student,2)" class=" ml-2 btn btn-sm  btn-outline-danger text-dark text-center mb-2">Not-Recommend Request</button>
+  
+                </div>
              
             </div>
            
           </div>
+          
         </div>
       </div>
 
@@ -156,7 +175,7 @@
           <div class="modal-content">
             <div class="modal-header" v-bind:class="{'table-success' :showApproved, 'table-primary':!showApproved}">
               <h5 class="modal-title text-center" >User Profile</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" class="close" id="closeModal" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -175,8 +194,9 @@
                 <tr>
                   <td>Email</td><td><input class="form-control" name="email" type="textbox" v-model="user.email" disabled></label></td>
                 </tr>
-                
               </table>
+              
+                
              
             </div>
            
@@ -197,15 +217,19 @@
        delimiters : ['${', '}'],
        el: "#app",
        data:{
-         user:{username:"User",designation:"",campus:"Goa Campus",email:"abc@goa.bits-pilani.ac.in"},
+         user:{username:"User",designation:"",campus:"Goa Campus",email:"abc@goa.bits-pilani.ac.in",usertype:""},
          modal_student:{},
          modal_student_attr:[],
          showApproved:false,
-          data_pending:[],
-          student_pending_attributes:[],
-          data_approved:[],
-           student_approved_attributes:[],
-           loading:true,
+         data_pending:[],
+         student_pending_attributes:[],
+         data_approved:[],
+         student_approved_attributes:[],
+         loading:true,
+         comments:"",
+         isSupervisor:false,
+         isHOD:false,
+         application_type:"",
           //data_pending:[{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'}],
          // student_pending_attributes:[{'display':'Student Name','prop':'name'},{'display':'CGPA','prop':'cgpa'},{'display':'Thesis Location','prop':'thesis_locale'},{'display':'Thesis Subject','prop':'thesis_subject'},{'display':'Organisation','prop':'name_of_org'},{'display':'Expected Deliverables','prop':'expected_deliverables'}],
           //data_approved:[{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name1','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'},{'name':'name2','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'dasdasaad das ddasd as das das das dasda sdASsasm dm as '},{'name':'name3','cgpa':'9','thesis_locale':'Delhi','thesis_subject':'subj','name_of_org':'IIT Delhi','expected_deliverables':'Loren Ipsum'}],
@@ -213,15 +237,24 @@
         },
         mounted()
         {
-         this.getData();
-        
-
-       },
+          this.user.usertype= {{request.user.userprofile.user_type}};
+          this.user.usertype=parseInt(this.user.usertype);
+          if(this.user.usertype == 2)
+            this.isHOD=true;
+          else
+            {
+              this.isSupervisor=true;
+              this.getData();
+            }
+          console.log(this.user)
+         
+         
+        },
        methods:
        {
          getData()
          {
-            axios.get('/TMS/data/get-application-data/')
+            axios.get('/TMS/data/get-application-data/?application_type='+this.application_type)
             .then(response=>
             {
               
@@ -236,6 +269,8 @@
                 
                 
                 this.data_pending=response.data.data_pending;
+
+                
                 
                 this.data_approved=response.data.data_approved;
                 
@@ -243,11 +278,11 @@
 
                 
                 
-                console.log(this.data_approved)
+               
                 
                 this.student_pending_attributes=response.data.student_pending_attributes;
                 this.student_approved_attributes=response.data.student_approved_attributes;
-                console.log(this.student_approved_attributes)  
+               
                 if(response.data.user)
                 this.user=response.data.user;
               }
@@ -277,7 +312,7 @@
           
            console.log(stud,status);
            if(confirm('Are you sure to approve '+stud.applicant__user__first_name+'\'s request'))
-           axios.get('/TMS/data/approve-transfer-request?student_username='+stud.applicant__user__username+'&status='+status)
+           axios.get('/TMS/data/approve-transfer-request?student_username='+stud.applicant__user__username+'&status='+status+'&comments='+this.comments)
            .then(response=>
            {
               response = response.data;
@@ -285,6 +320,7 @@
               alert('Error Approving this request, Contact Adminstrator', response.message);
               else
               alert('Request submitted.',response.message);
+
            })
            .catch(error =>
            {
@@ -292,8 +328,9 @@
            })
            .finally(x=>
            {
-
+           
              this.getData();
+             $('#applicationDetailsModal').modal('hide'); $('.modal-backdrop').remove();
            })
          }
        }

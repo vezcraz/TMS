@@ -29,6 +29,7 @@ def get_hod_data(request):
         current_user = request.user
         current_user_alias = 'Head Of Department'
         campus_alias = CampusType._member_names_[current_user.userprofile.campus]
+        print(request.GET.get('application_type'))
         if request.GET.get('application_type') == TransferType.TS2PS:
             # applications where approval is pending
             pending_applications_qs = TS2PSTransfer.objects.filter(
