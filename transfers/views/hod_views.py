@@ -7,6 +7,7 @@ from transfers.models import PS2TSTransfer, UserProfile, TS2PSTransfer
 from transfers.utils.shared_utils import update_application, clean_list
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from transfers.decorators import hod_required
 
@@ -89,7 +90,7 @@ def get_hod_data(request):
                 'applicant__user__first_name', 'applicant__user__last_name',
                 'cgpa', 'thesis_locale', 'supervisor_email',
                 'thesis_subject', 'name_of_org', 'expected_deliverables',
-                'is_hod_approved',
+                'is_hod_approved', 'comments_from_supervisor',
             )
             pending_applications_list = list(pending_applications_qs)
             pending_applications_list = clean_list(pending_applications_list)
@@ -103,7 +104,7 @@ def get_hod_data(request):
                 'applicant__user__first_name', 'applicant__user__last_name',
                 'cgpa', 'thesis_locale', 'supervisor_email',
                 'thesis_subject', 'name_of_org', 'expected_deliverables',
-                'is_hod_approved',
+                'is_hod_approved', 'comments_from_supervisor',
             )
             approved_applications_list = list(approved_applications_qs)
             approved_applications_list = clean_list(approved_applications_list)
@@ -126,6 +127,7 @@ def get_hod_data(request):
                 {'display':'Thesis Subject','prop':'thesis_subject'},
                 {'display':'Organisation','prop':'name_of_org'},
                 {'display':'Expected Deliverables','prop':'expected_deliverables'},
+                {'display':'Supervisor comments','prop':'comments_from_supervisor'},
                 {'display':'Status', 'prop':'status'}
             ]
             response['data']['student_pending_attributes'] = attributes_for_display[:-1]
