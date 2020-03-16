@@ -1,7 +1,8 @@
 nav{
 	font-size: smaller !important;
 }
-#student-details-table{
+#student-details-table,#student-details-modal-table,#applicationDetailsModal,#user-details-modal-table
+{
 	font-size: small !important;
 	line-height: .6;
 }

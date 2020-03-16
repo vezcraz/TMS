@@ -1,24 +1,22 @@
 # This file will contain utility functions that are not strictly related to a single user types and other places
 from transfers.constants import UserType, ApplicationsStatus, ThesisLocaleType
-from transfers.models import DeadlineModel, PS2TSTransfer
+from transfers.models import DeadlineModel, PS2TSTransfer, TS2PSTransfer
 from transfers.constants import TransferType
 from django.utils import timezone as datetime
 
 
 def update_application(applicant, application_type, approved_by, status):
     try:
-        if application_type == TransferType.TS2PS:
+        if application_type == TransferType.TS2PS.value:
             transfer_form = TS2PSTransfer.objects.get(applicant__user__username=applicant)
         else:
             transfer_form = PS2TSTransfer.objects.get(applicant__user__username=applicant)
         if approved_by == UserType.SUPERVISOR.value:
             transfer_form.is_supervisor_approved = int(status)
-            print(int(status))
         elif approved_by == UserType.HOD.value:
             transfer_form.is_hod_approved = int(status)
-            print(int(status))
         elif approved_by == UserType.AD.value:
-            if application_type == TransferType.TS2PS:    
+            if application_type == TransferType.TS2PS.value:    
                 transfer_form.is_hod_approved = int(status)
             else:
                 transfer_form.is_supervisor_approved = int(status)
@@ -26,23 +24,21 @@ def update_application(applicant, application_type, approved_by, status):
         transfer_form.save()
         return True
     except Exception as e:
+        print('Error in shared_utils.update_application')
         print(e) # left for debugging
         return False
 
 def clean_list(application_list):
     for data in application_list:
         try:
-            data['thesis_locale_alias'] = ThesisLocaleType._member_names_[data.pop('thesis_locale')]
+            if 'thesis_locale' in data:
+                data['thesis_locale_alias'] = ThesisLocaleType._member_names_[data.pop('thesis_locale')]
             if 'is_supervisor_approved' in data:
                 status_alias = ApplicationsStatus._member_names_[data.pop('is_supervisor_approved')]
                 data['status'] = status_alias
-                print(status_alias)
-                print('OK 1')
             elif 'is_hod_approved' in data:
                 status_alias = ApplicationsStatus._member_names_[data.pop('is_hod_approved')]
                 data['status'] = status_alias
-                print(status_alias)
-                print('OK 2')
         except Exception as e:
             print('ERROR OCCURED!')
             print(e) # left for debugging
