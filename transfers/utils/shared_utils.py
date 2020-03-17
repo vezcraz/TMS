@@ -5,7 +5,7 @@ from transfers.constants import TransferType
 from django.utils import timezone as datetime
 
 
-def update_application(applicant, application_type, approved_by, status):
+def update_application(applicant, application_type, approved_by, status, comments):
     try:
         if application_type == TransferType.TS2PS.value:
             transfer_form = TS2PSTransfer.objects.get(applicant__user__username=applicant)
@@ -13,14 +13,17 @@ def update_application(applicant, application_type, approved_by, status):
             transfer_form = PS2TSTransfer.objects.get(applicant__user__username=applicant)
         if approved_by == UserType.SUPERVISOR.value:
             transfer_form.is_supervisor_approved = int(status)
+            transfer_form.comments_from_supervisor = comments
         elif approved_by == UserType.HOD.value:
             transfer_form.is_hod_approved = int(status)
+            transfer_form.comments_from_hod = comments
         elif approved_by == UserType.AD.value:
             if application_type == TransferType.TS2PS.value:    
                 transfer_form.is_hod_approved = int(status)
             else:
                 transfer_form.is_supervisor_approved = int(status)
                 transfer_form.is_hod_approved = int(status)
+            transfer_form.comments_from_ad = comments
         transfer_form.save()
         return True
     except Exception as e:
@@ -40,7 +43,7 @@ def clean_list(application_list):
                 status_alias = ApplicationsStatus._member_names_[data.pop('is_hod_approved')]
                 data['status'] = status_alias
         except Exception as e:
-            print('ERROR OCCURED!')
+            print('error in shared_utils.clean_list')
             print(e) # left for debugging
     return application_list
 

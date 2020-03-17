@@ -92,3 +92,15 @@ def mail(data, request, body):
     send_mail("Transfer Application: " + request.user.username, body,
         'psdmail2020@gmail.com',[str(data.hod_email)],
         fail_silently=False)
+
+def get_authority_comments(userprofile):
+    ps2ts = PS2TSTransfer.objects.filter(applicant=userprofile)
+    ts2ps = TS2PSTransfer.objects.filter(applicant=userprofile)
+    if ps2ts.count() == 1:
+        comments_from_hod = ps2ts[0].comments_from_hod
+        comments_from_supervisor = ps2ts[0].comments_from_supervisor
+        comments_from_ad = ps2ts[0].comments_from_ad
+    elif ts2ps.count() == 1:
+        comments_from_hod = ts2ps[0].comments_from_hod
+        comments_from_ad = ts2ps[0].comments_from_ad
+    return (comments_from_hod, comments_from_supervisor, comments_from_ad)
