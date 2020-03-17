@@ -34,9 +34,13 @@ class AssocDeanLisApplicationstView(generic.ListView):
 
 def reject_transfer_request(request):
     applicant = request.GET['student_username']
+    application_type = request.GET.get('application_type')
+    # Assoc Dean can only reject the form
     status = ApplicationsStatus.REJECTED.value
     rejected_by = request.user.userprofile.user_type
-    saved = update_application(applicant, rejected_by, status)
+    # Client should send the comments too.
+    comments = request.GET.get('comments')
+    saved = update_application(applicant, application_type, rejected_by, status, comments)
     response = {}
     if saved:
         response['error'] = False

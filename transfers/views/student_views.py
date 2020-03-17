@@ -9,7 +9,8 @@ from transfers.forms import PS2TSTransferForm, TS2PSTransferForm
 
 from transfers.utils.student_utils import (
     get_application_status, notify_ps2ts, notify_ts2ps,
-    get_branch_from_branch_code
+    get_branch_from_branch_code,
+    get_authority_comments
 )
 from transfers.utils.shared_utils import get_deadline_status
 import pandas as pd 
@@ -29,10 +30,17 @@ class StudentDashboardView(generic.TemplateView):
         current_userprofile = request.user.userprofile
         (application_type, has_applied, application_status,
             error) = get_application_status(current_userprofile)
+        (comments_from_hod, comments_from_supervisor, 
+            comments_from_ad) = get_authority_comments(current_userprofile)
+        # for testing purposes
+        print (comments_from_ad + comments_from_hod + comments_from_supervisor)
         self.context['application_type'] = application_type
         self.context['has_applied'] = has_applied
         self.context['application_status'] = application_status
         self.context['error'] = error
+        self.context['comments_from_hod'] = comments_from_hod
+        self.context['comments_from_supervisor'] = comments_from_supervisor
+        self.context['comments_from_ad'] = comments_from_ad
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):

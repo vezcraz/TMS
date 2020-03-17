@@ -116,7 +116,10 @@ def create_ps2tstransfer(n, student_name):
                 name_of_org=fake_org,
                 expected_deliverables=fake_thesis,
                 is_supervisor_approved=random.choice(boolean_choices),
-                is_hod_approved=random.choice(boolean_choices)
+                is_hod_approved=random.choice(boolean_choices),
+                comments_from_supervisor= 'Test from Supervisor',
+                comments_from_hod= 'Test comment from HOD',
+                comments_from_ad= 'Test comment from AD'
             )
         except Exception as e:
             print(str(e))
@@ -141,7 +144,9 @@ def create_ts2pstransfer(n, student_name):
                 cgpa=fake_cg,
                 reason_for_transfer=fake_reason,
                 name_of_org=fake_org_name,
-                is_hod_approved=random.choice(boolean_choices)
+                is_hod_approved=random.choice(boolean_choices),
+                comments_from_hod= 'Test comment from HOD',
+                comments_from_ad= 'Test comment from AD'
             )
         except Exception as e:
             print(str(e))
