@@ -20,12 +20,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7(^b1g(c5260n(a@pvfk85hg54%t7juq3sv0k0h9ctycy*g1)-'
+try:
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+except KeyError:
+    SECRET_KEY = '7(^b1g(c5260n(a@pvfk85hg54%t7juq3sv0k0h9ctycy*g1)-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'DEBUG' not in os.environ
 
 ALLOWED_HOSTS = []
+if not DEBUG:
+    ALLOWED_HOSTS += ['172.31.33.237']
 
 
 # Application definition
@@ -76,13 +81,24 @@ WSGI_APPLICATION = 'TMS.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+if not DEBUG:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '',
+        }
+    }
 
 
 # Password validation
@@ -120,10 +136,7 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-LOGIN_REDIRECT_URL = '/TMS/login_redirect'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
 STATIC_URL = '/static/'
 
 
@@ -133,8 +146,8 @@ LOGOUT_REDIRECT_URL = '/TMS/login-redirect/'
 
 
 # Email service
-EMAIL_HOST= 'smtp.gmail.com'
-EMAIL_PORT= '587'
-EMAIL_HOST_USER= 'psdmail2020@gmail.com'
-EMAIL_HOST_PASSWORD='Psdmail@123'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'psdmail2020@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 EMAIL_USE_TLS = True
