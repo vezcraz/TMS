@@ -26,3 +26,8 @@ media/
 *venv/
 *ENV/
 
+# static folder
+/static/
+
+# editor related
+.DS_Store

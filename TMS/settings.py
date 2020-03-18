@@ -20,15 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-try:
-    SECRET_KEY = os.environ['SECRET_KEY']
-except KeyError:
-    SECRET_KEY = '7(^b1g(c5260n(a@pvfk85hg54%t7juq3sv0k0h9ctycy*g1)-'
+SECRET_KEY = '7(^b1g(c5260n(a@pvfk85hg54%t7juq3sv0k0h9ctycy*g1)-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '13.126.92.97', 'bits-pilani.in',]
+ALLOWED_HOSTS = ['localhost', '13.126.92.97', 'bits-pilani.in', 'www.bits-pilani.in',]
 
 
 # Application definition
@@ -86,17 +83,6 @@ DATABASES = {
     }
 }
 
-if not DEBUG:
-    DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '',
-        }
-    }
 
 
 # Password validation
@@ -146,6 +132,6 @@ LOGOUT_REDIRECT_URL = '/TMS/login-redirect/'
 # Email service
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
-EMAIL_HOST_USER = 'psdmail2020@gmail.com'
+EMAIL_HOST_USER = 'psdivisionbits@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 EMAIL_USE_TLS = True
