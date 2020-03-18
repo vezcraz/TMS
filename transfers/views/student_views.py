@@ -35,7 +35,6 @@ class StudentDashboardView(generic.TemplateView):
         # for testing purposes
         deadline_status_ps2ts = get_deadline_status(TransferType.PS2TS.value)
         deadline_status_ts2ps = get_deadline_status(TransferType.TS2PS.value)
-        print (comments_from_ad + comments_from_hod + comments_from_supervisor)
         self.context['application_type'] = application_type
         self.context['has_applied'] = has_applied
         self.context['application_status'] = application_status
