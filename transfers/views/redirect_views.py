@@ -67,6 +67,9 @@ def reject_transfer_request_redirect_view(request):
         return redirect('/TMS/login/')
     else:
         student_username = request.GET.get('student_username')
+        applications_status = request.GET.get('status')
+        comments = request.GET.get('comments')
+        application_type = request.GET.get('application_type')
         if request.user.is_superuser:
             return redirect('/TMS-admin/')
         user_type = request.user.userprofile.user_type
@@ -75,6 +78,7 @@ def reject_transfer_request_redirect_view(request):
         elif user_type == UserType.SUPERVISOR.value:
             return redirect('/TMS/supervisor/home/')
         elif user_type == UserType.AD.value:
-            return redirect('/TMS/assoc-dean/reject-transfer-request?student_username='+student_username)
+            url = '/TMS/assoc-dean/reject-transfer-request?student_username='+student_username+'&status='+applications_status+'&comments='+comments+'&application_type='+application_type
+            return redirect(url)
         else:
             return redirect('/TMS/login-redirect/')

@@ -33,6 +33,7 @@ class AssocDeanLisApplicationstView(generic.ListView):
         return JsonResponse(return_list, safe=False)
 
 def reject_transfer_request(request):
+    print(request.GET)
     applicant = request.GET['student_username']
     application_type = request.GET.get('application_type')
     # Assoc Dean can only reject the form
