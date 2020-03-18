@@ -96,6 +96,9 @@ def mail(data, request, body):
 def get_authority_comments(userprofile):
     ps2ts = PS2TSTransfer.objects.filter(applicant=userprofile)
     ts2ps = TS2PSTransfer.objects.filter(applicant=userprofile)
+    comments_from_ad = ""
+    comments_from_supervisor = ""
+    comments_from_hod = ""
     if ps2ts.count() == 1:
         comments_from_hod = ps2ts[0].comments_from_hod
         comments_from_supervisor = ps2ts[0].comments_from_supervisor
