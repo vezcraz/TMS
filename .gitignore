@@ -22,7 +22,7 @@ media/
 .env
 
 # virtualenv
-env/
-venv/
-ENV/
+*env/
+*venv/
+*ENV/
 

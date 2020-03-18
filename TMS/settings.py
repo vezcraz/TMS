@@ -21,16 +21,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 try:
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_KEY = os.environ['SECRET_KEY']
 except KeyError:
     SECRET_KEY = '7(^b1g(c5260n(a@pvfk85hg54%t7juq3sv0k0h9ctycy*g1)-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'DEBUG' not in os.environ
+DEBUG = True
 
-ALLOWED_HOSTS = []
-if not DEBUG:
-    ALLOWED_HOSTS += ['172.31.33.237']
+ALLOWED_HOSTS = ['localhost', '13.126.92.97', 'bits-pilani.in',]
 
 
 # Application definition
