@@ -42,8 +42,8 @@ class StudentDashboardView(generic.TemplateView):
         self.context['comments_from_hod'] = comments_from_hod
         self.context['comments_from_supervisor'] = comments_from_supervisor
         self.context['comments_from_ad'] = comments_from_ad
-        self.context['deadline_status_ps2ts']=deadline_status_ps2ts
-        self.context['deadline_status_ts2ps']=deadline_status_ts2ps
+        self.context['deadline_status_ps2ts']=1 if deadline_status_ps2ts else 0
+        self.context['deadline_status_ts2ps']=1 if deadline_status_ts2ps else 0
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
@@ -56,8 +56,8 @@ class StudentDashboardView(generic.TemplateView):
         self.context['has_applied'] = has_applied
         self.context['application_status'] = application_status
         self.context['error'] = error
-        self.context['deadline_status_ps2ts']=deadline_status_ps2ts
-        self.context['deadline_status_ts2ps']=deadline_status_ts2ps
+        self.context['deadline_status_ps2ts']=1 if deadline_status_ps2ts else 0
+        self.context['deadline_status_ts2ps']=1 if deadline_status_ts2ps else 0
         return render(request, self.template_name, self.context)
 
 @method_decorator([login_required, student_required], name='dispatch')

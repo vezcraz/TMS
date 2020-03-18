@@ -30,6 +30,8 @@ urlpatterns = [
     # FIXME: These two views should be inside psd_views
     path('psd/populate-data/',fillUser.fill),
     path('psd/download-transfers/',export_views.exp),
+    # Show deadline in header
+    path('get-deadline', psd_views.get_PSD_data),
 ]
 
 # data related urls (usually requested by ajax calls in already rendered templates)

@@ -109,15 +109,18 @@
         </div>
       </div>
       <br>
-      <div class="site-navbar py-3  site-navbar-target border border-dark" role="banner" style="background: #B8D0E1">
+      <div class="site-navbar py-0  site-navbar-target border border-dark" role="banner" style="background: #B8D0E1">
         <center>
-          <div style="font-size: 22px; color: red;" id="website_base_deadline"> <b>
+          <div class="text-danger font-weight-bold" style="font-size: 20px;" id="website_base_deadline1">
+            <!-- <p type="abc" name="website_base_deadline" id="website_base_deadline"> </p> -->
+          </div>
+          <div class="text-danger font-weight-bold" style="font-size: 20px;" id="website_base_deadline2">
             <!-- <p type="abc" name="website_base_deadline" id="website_base_deadline"> </p> -->
           </div>
       </div>
     </header>  
   </div>
-<br><br><br><br>
+<br><br><br><br><br>
     <body>
 
     {% block header %}     
@@ -157,35 +160,28 @@
   }
 </style>
 
-<!-- <script type="text/javascript">
+<script type="text/javascript">
 
-  
+  function getDate(datee)
+        {
+          //console.log(datee.substr(0,10)+"  "+datee.substr(11,8));
+          var date=" Date: "+datee.substr(0,10)+"  Time: "+datee.substr(11,8);
+          return (date)
+        }
   $.ajax({
-    url: '/PS2/get-deadline',
+    url: '/TMS/get-deadline',
     type:'GET',
     success: function(response)
     {
-      var deadlineAttempt = response['deadlineAttempt'];
-      var deadline = response['deadline'];
-      var value = "";
-
-      if( deadlineAttempt == 1 ){
-        value = "Last date of submission : " + deadline;
-      }
-      else if ( deadlineAttempt == 2 ){
-        value = "Last date of Re-Application 1 : " + deadline;
-      }
-      else if (deadlineAttempt == 3 ){
-        value = "Last date of Re-Application 2 : " + deadline; 
-      }
-      else if (deadlineAttempt == 0 ){
-        value = "Deadline passed, no more applications being accepted.";
-      }
-      document.getElementById("website_base_deadline").innerHTML = value;
+      var deadline_ps2ts = getDate(response.data['deadline_PS2TS']);
+      var deadline_ts2ps = getDate(response.data['deadline_TS2PS']);
+      //console.log(getDate(response.data['deadline_PS2TS']));
+      document.getElementById("website_base_deadline1").innerHTML ="1. Deadline for PS to TS Transfer Application - "+deadline_ps2ts;
+      document.getElementById("website_base_deadline2").innerHTML ="2. Deadline for TS to PS Transfer Application - "+deadline_ts2ps;
     }
   });
   
- </script> -->
+ </script>
 
 </html>
 

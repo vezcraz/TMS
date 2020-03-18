@@ -17,8 +17,8 @@
         
         <div class="btn-group btn p-1 mt-5" id="typeOfPage">
             <br>
-            <input class="btn btn-primary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="PStoTStransfer" value="PS to TS Transfer" onclick="location.href='/TMS/student/PS2TS';">            
-            <input class="btn btn-secondary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="TStoPStransfer" value="TS to PS Transfer" onclick="location.href='/TMS/student/TS2PS';">
+            <input class="btn btn-primary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="PStoTStransfer" value="PS to TS Transfer" onclick="location.href='/TMS/student/PS2TS';" data-toggle="tooltip" data-placement="top" title="">            
+            <input class="btn btn-secondary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="TStoPStransfer" value="TS to PS Transfer" onclick="location.href='/TMS/student/TS2PS';" data-toggle="tooltip" data-placement="top" title="">
             <br>
         </div>
 
@@ -26,7 +26,7 @@
         <h3 class="text-dark"> 1) PS to TS </h3>        
         <h3 class="text-dark"> 2) TS to PS </h3>  
         <br>      
-        <p class="text-danger"> <b>Note</b>: Each type of Form can be filled a maximum of 2 times. After 3 attempts,<br> no further requests will be considered. Kindly fill the forms judiciously. </p>
+        <p class="text-danger"> <b>Note</b>: Only type of the form can only be filled. After this attempt, no further <br> requests will be considered. Kindly fill the form judiciously. </p>
 
            
         
@@ -92,20 +92,56 @@
         </div>
         <form class="signup-form1 shadow col-md-12 p-3 mb-5 table-light rounded text-center" id="appliedForm" action="" method="post" readonly> 
             {% csrf_token %}                
-                <br/>                
-                <div class="form-group row" id="appliedReply">
-                    <label class="col-sm-3 col-form-label">Comments by authorities</label>
+                <br/>    
+                <br/>  
+                <h3 class="text-dark">Comments From Authorities</h3>
+                <br/>          
+                <div class="form-group row" id="appliedReply1">
+                    <label class="col-sm-3 col-form-label">Comments by Supervisor</label>
                     <div class="col-sm-7">
-                        <textarea class="form-control" id="appliedReply" rows="4" cols="20" readonly></textarea>
+                        <textarea class="form-control" id="appliedReply" rows="4" cols="20" readonly>{{ comments_from_supervisor }}</textarea>
                     </div>
                 </div> 
-
+                <div class="form-group row" id="appliedReply2">
+                    <label class="col-sm-3 col-form-label">Comments by Head of Department</label>
+                    <div class="col-sm-7">
+                        <textarea class="form-control" id="appliedReply" rows="4" cols="20" readonly>{{ comments_from_hod }}</textarea>
+                    </div>
+                </div>                
+                <div class="form-group row" id="appliedReply3">
+                    <label class="col-sm-3 col-form-label">Comments by PS Division</label>
+                    <div class="col-sm-7">
+                        <textarea class="form-control" id="appliedReply" rows="4" cols="20" readonly>{{ comments_from_ad }}</textarea>
+                    </div>
+                </div>               
                 <!-- Edit when Rejected -->
                 <!-- <input class="btn btn-secondary m-2 rounded-1" style="font-size: 20px" type="button" name="type" id="editForm" value="Edit Form" onclick="location.href='/TMS/student/PS2TS';"> -->
         </form>
         
         
         <script type="text/javascript">
+        	//console.log({{ application_type }})
+        	//console.log('{{ deadline_status_ps2ts }}')
+        	if ({{ deadline_status_ps2ts }}) {
+        		$('#PStoTStransfer').prop('disabled', false);
+        	}
+        	else
+        	{
+        		$('#PStoTStransfer').prop('disabled', true);
+        		document.getElementById('PStoTStransfer').title="No more applications allowed. Deadline has passed or form has been disabled."
+        	}
+        	if ({{ deadline_status_ts2ps }}) {
+        		$('#TStoPStransfer').prop('disabled', false);
+        	}
+        	else
+        	{
+        		$('#TStoPStransfer').prop('disabled', true);
+        		document.getElementById('TStoPStransfer').title="No more applications allowed. Deadline has passed or form has been disabled."
+        	}
+        	if({{ application_type }} == 1)
+        	{
+        		document.getElementById("appliedReply1").style.display = "none";
+        	}
         	var status = {{ application_status }};   
         	/*var edit = 0;
         	function checkStatus() 
@@ -124,7 +160,7 @@
 	            }
 	            else if(status_value == 2)
 	            {	                
-	                edit=1;
+	                //edit=1;
 	                return "Rejected";	
 	            }
 	            /*else if(status_value == 3)
