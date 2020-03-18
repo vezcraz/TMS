@@ -62,8 +62,7 @@ def get_form_data(request, *args, **kwargs):
     return render(request, template_name, context)
 
 
-@login_required
-@psd_required
+
 def get_PSD_data(request, *args, **kwargs):
     response = {}
     try:
