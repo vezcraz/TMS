@@ -33,6 +33,8 @@ class StudentDashboardView(generic.TemplateView):
         (comments_from_hod, comments_from_supervisor, 
             comments_from_ad) = get_authority_comments(current_userprofile)
         # for testing purposes
+        deadline_status_ps2ts = get_deadline_status(TransferType.PS2TS.value)
+        deadline_status_ts2ps = get_deadline_status(TransferType.TS2PS.value)
         print (comments_from_ad + comments_from_hod + comments_from_supervisor)
         self.context['application_type'] = application_type
         self.context['has_applied'] = has_applied
@@ -41,16 +43,22 @@ class StudentDashboardView(generic.TemplateView):
         self.context['comments_from_hod'] = comments_from_hod
         self.context['comments_from_supervisor'] = comments_from_supervisor
         self.context['comments_from_ad'] = comments_from_ad
+        self.context['deadline_status_ps2ts']=deadline_status_ps2ts
+        self.context['deadline_status_ts2ps']=deadline_status_ts2ps
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
         current_userprofile = request.user.userprofile
         (application_type, has_applied, application_status,
             error) = get_application_status(current_userprofile)
+        deadline_status_ps2ts = get_deadline_status(TransferType.PS2TS.value)
+        deadline_status_ts2ps = get_deadline_status(TransferType.TS2PS.value)
         self.context['application_type'] = application_type
         self.context['has_applied'] = has_applied
         self.context['application_status'] = application_status
         self.context['error'] = error
+        self.context['deadline_status_ps2ts']=deadline_status_ps2ts
+        self.context['deadline_status_ts2ps']=deadline_status_ts2ps
         return render(request, self.template_name, self.context)
 
 @method_decorator([login_required, student_required], name='dispatch')
