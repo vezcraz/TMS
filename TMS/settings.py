@@ -25,7 +25,7 @@ SECRET_KEY = '7(^b1g(c5260n(a@pvfk85hg54%t7juq3sv0k0h9ctycy*g1)-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '13.126.92.97', 'bits-pilani.in', 'www.bits-pilani.in',]
+ALLOWED_HOSTS = ['localhost', '13.126.92.97', 'bits-pilani.in', 'www.bits-pilani.in', '127.0.0.1:8000']
 
 
 # Application definition
@@ -135,3 +135,11 @@ EMAIL_PORT = '587'
 EMAIL_HOST_USER = 'psdivisionbits@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 EMAIL_USE_TLS = True
+
+try:
+    from .local_settings import *
+    print('Local settings applied')
+except ImportError:
+    print('No local settings found')
+    pass
+
