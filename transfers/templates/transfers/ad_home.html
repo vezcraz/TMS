@@ -473,14 +473,12 @@
           .then(response=>
           {
             this.data_all=response.data;
-            console.log(response.data[0].is_hod_approved)
-            this.data_approved=this.data_all;
-            this.data_approved_old=this.data_all;
-            //this.data_approved=response.data.data_approved;
-            //this.data_approved_old=response.data.data_approved;
-            //this.data_not_approved=response.data.data_not_approved;
-            //this.data_not_approved_old=response.data.data_not_approved;
-            //console.log(response.data[11]);
+            console.log(response.data[0]);
+            this.data_approved=response.data[0];
+            this.data_approved_old=response.data[0];
+            this.data_not_approved=response.data[1];
+            this.data_not_approved_old=response.data[1];
+            //console.log(response.data[1]);
             for (index=0;index<this.data_approved.length; index++) 
             {
               if (this.data_approved[index].applicant__user__username.substring(4,6)=="AA") 
@@ -599,9 +597,11 @@
               if(response.error)
               {
                 document.getElementById('closeModal').click();
+                this.comments="";
               alert('Error Rejecting this request, Contact Adminstrator', response.message);}
               else{
                 document.getElementById('closeModal').click();
+                this.comments="";
                 alert('Request rejected! ',response.message);}
            })
            .catch(error =>

@@ -16,6 +16,8 @@ def fetch_ps2ts_list():
         'sub_type', 'is_supervisor_approved',
         'is_hod_approved', 'cgpa', 'thesis_locale', 'supervisor_email',
             'thesis_subject', 'name_of_org', 'expected_deliverables', 'application_date'
+    ).order_by(
+        '-thesis_locale', 'is_hod_approved', 
     )
     ps2ts_rejected_qs = PS2TSTransfer.objects.filter(
         is_ad_approved=ApplicationsStatus.REJECTED.value
@@ -26,7 +28,7 @@ def fetch_ps2ts_list():
         'is_hod_approved', 'cgpa', 'thesis_locale', 'supervisor_email',
             'thesis_subject', 'name_of_org', 'expected_deliverables', 'application_date'
     ).order_by(
-        'is_hod_approved', 
+        '-thesis_locale', 'is_hod_approved', 
     )
     # converting QuerySet --> List
     ps2ts_approved_list = list(ps2ts_approved_qs)
@@ -43,17 +45,19 @@ def fetch_ts2ps_list():
             'sub_type', 'is_hod_approved', 'cgpa', 
             'reason_for_transfer', 'name_of_org', 'application_date'
         ).order_by(
-            '-thesis_locale', 'is_hod_approved'
+            'is_hod_approved'
         )
-    ts2ps_approved_qs = TS2PSTransfer.objects.filter(
+    ts2ps_rejected_qs = TS2PSTransfer.objects.filter(
         is_ad_approved=ApplicationsStatus.REJECTED.value
         ).values(
             'applicant__user__username',
             'applicant__user__first_name', 'applicant__user__last_name',
             'sub_type', 'is_hod_approved', 'cgpa', 
             'reason_for_transfer', 'name_of_org', 'application_date'
-    )
+    ).order_by(
+            'is_hod_approved'
+        )
     # converting QuerySet --> List
     ts2ps_approved_list = list(ts2ps_approved_qs)
-    ts2ps_approved_list = list(ts2ps_approved_qs)
-    return [ts2ps_approved_list, ts2ps_approved_list]
+    ts2ps_rejected_list = list(ts2ps_rejected_qs)
+    return [ts2ps_approved_list, ts2ps_rejected_list]
