@@ -18,11 +18,7 @@ def update_application(applicant, application_type, approved_by, status, comment
             transfer_form.is_hod_approved = int(status)
             transfer_form.comments_from_hod = comments
         elif approved_by == UserType.AD.value:
-            if application_type == TransferType.TS2PS.value:    
-                transfer_form.is_hod_approved = int(status)
-            else:
-                transfer_form.is_supervisor_approved = int(status)
-                transfer_form.is_hod_approved = int(status)
+            transfer_form.is_ad_approved = int(status)
             transfer_form.comments_from_ad = comments
         transfer_form.save()
         return True
