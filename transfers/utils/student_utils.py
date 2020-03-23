@@ -38,14 +38,24 @@ def _get_ps2ts_application_status(userprofile, ps2ts):
     application = ps2ts[0]
     # until both supervisor and hod approves the application, the status remains 0
     if application.is_supervisor_approved == ApplicationsStatus.REJECTED.value or \
-        application.is_hod_approved == ApplicationsStatus.REJECTED.value:
+        application.is_hod_approved == ApplicationsStatus.REJECTED.value or \
+        application.is_ad_approved == ApplicationsStatus.REJECTED.value:
         return ApplicationsStatus.REJECTED.value
+    elif application.is_supervisor_approved == ApplicationsStatus.PENDING.value or \
+        application.is_hod_approved == ApplicationsStatus.PENDING.value:
+        return ApplicationsStatus.PENDING.value
     else:
-        return application.is_hod_approved * application.is_supervisor_approved
+        return ApplicationsStatus.APPROVED.value
 
 def _get_ts2ps_application_status(userprofile, ts2ps):
     application = ts2ps[0]
-    return application.is_hod_approved
+    if application.is_hod_approved == ApplicationsStatus.REJECTED.value or \
+        application.is_ad_approved == ApplicationsStatus.REJECTED.value:
+        return ApplicationsStatus.REJECTED.value
+    elif application.is_hod_approved == ApplicationsStatus.PENDING.value:
+        return ApplicationsStatus.PENDING.value
+    else:
+        return ApplicationsStatus.APPROVED.value
 
 def get_branch_from_branch_code(branch_code):
     switcher = {
@@ -90,7 +100,7 @@ def notify_ts2ps(request):
 
 def mail(data, request, body):
     send_mail("Transfer Application: " + request.user.username, body,
-        'psdmail2020@gmail.com',[str(data.hod_email)],
+        'psdiary.bits@gmail.com',[str('data.hod_email')],
         fail_silently=False)
 
 def get_authority_comments(userprofile):
