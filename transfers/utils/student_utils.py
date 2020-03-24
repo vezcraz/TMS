@@ -60,17 +60,25 @@ def _get_ts2ps_application_status(userprofile, ts2ps):
 def get_branch_from_branch_code(branch_code):
     switcher = {
         'A1': 'B.E. Chemical Engineering',
+        'A2': 'B.E. Civil Engineering',
         'A3': 'B.E. Electrical and Electronics Engineering',
         'A4': 'B.E. Mechanical Engineering',
+        'A5': 'B. Pharm.',
         'A7': 'B.E. Computer Science Engineering',
         'A8': 'B.E. Electronics and Instrumentation Engineering',
+        'A9': 'B.E. Biotechnology',
         'AA': 'B.E. Electronics and Communication Engineering',
+        'AB': 'B.E. Manufacturing Engineering',
         'B1': 'M.Sc. Biology + ',
         'B2': 'M.Sc. Chemistry + ',
         'B3': 'M.Sc. Economics + ',
         'B4': 'M.Sc. Mathematics + ',
         'B5': 'M.Sc. Physics + ',
-        'PS': ''
+        'C2': 'M.Sc. General Studies + ',
+        'C5': 'M.Sc. Engineering Technology + ',
+        'C6': 'M.Sc. Information Systems + ',
+        'C7': 'M.Sc. Finance + ',
+        'PS': '',
     }
     return switcher.get(branch_code, "Invalid branch code")
 def notify_ps2ts(request):
