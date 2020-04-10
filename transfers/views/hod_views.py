@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from transfers.decorators import hod_required
+from django.http import HttpResponse
+from transfers.tools.export import getFileHod
 
 @method_decorator([login_required, hod_required], name='dispatch')
 class HODHomeView(generic.TemplateView):
@@ -197,3 +199,15 @@ def approve_transfer_request(request):
         response['error'] = True
         response['message'] = 'Failed to approve application!'
     return JsonResponse(response, safe=False)
+
+@login_required
+@hod_required
+def export_hod(request):
+    if request.method=='POST':
+        if request.user.is_superuser or request.user.userprofile.user_type==2:
+            print(request.POST['type'])
+            response=getFileHod(request, int(request.POST['type']))
+        else:
+            response=HttpResponse("You don't have acces to this page")
+        return response
+
