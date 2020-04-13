@@ -203,10 +203,10 @@ def approve_transfer_request(request):
 @login_required
 @hod_required
 def export_hod(request):
-    if request.method=='POST':
+    if request.method=='GET':
         if request.user.is_superuser or request.user.userprofile.user_type==2:
-            print(request.POST['type'])
-            response=getFileHod(request, int(request.POST['type']))
+            print(request.GET['type'])
+            response=getFileHod(request, int(request.GET['type']))
         else:
             response=HttpResponse("You don't have acces to this page")
         return response

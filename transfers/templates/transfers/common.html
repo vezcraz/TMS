@@ -86,7 +86,7 @@
           Total Applications Pending &nbsp; :   ${data_pending.length}  <br>
           Total Applications Approved :   ${data_approved.length}
          </div>
-         <div class="text-right">
+         <div  v-if="isHOD" class="m-1 ml-2 text-right">
 
                  <a class="btn btn-success dropdown-toggle"  role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Export Data
@@ -95,8 +95,8 @@
 
 
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <button class="dropdown-item" @click="exportData(0)" >PS to TS Transfers</button>
-                    <button class="dropdown-item" @click="exportData(1)">TS to PS Transfers</button>
+                    <button class="dropdown-item" @click="exportData(1)" >PS to TS Transfers</button>
+                    <button class="dropdown-item" @click="exportData(2)">TS to PS Transfers</button>
                 
                   </div>
         </div>
@@ -375,21 +375,30 @@
            })
          },
          exportData(application_type){
-         /*  this.loading=true;
-            axios.get('/add end point/',{application_type:application_type})
-           .then(response=>
-           {
-              
-           })
+           this.loading=true;
+            axios.get('/TMS/data/export-hod/?type='+application_type,{responseType: 'blob', cache: 'no-cache', headers: {'content-type': 'application/vnd.ms-excel;charset=UTF-8'}})
+           .then(response =>  {
+                
+                  const url = window.URL.createObjectURL(new Blob([response.data], {type:'application/vnd.ms-excel'}));
+                  const link = document.createElement('a');
+                  
+                  link.href = url;
+                  link.setAttribute('download', 'Student Transfers.xls');
+                  document.body.appendChild(link);
+                  link.click();
+                 
+                 
+                })
            .catch(error =>
            {
-            
+             
+             alert('Server Error Occured with error Code: Common@395. Contact Adminsitrator')
            })
            .finally(x=>
            {
               this.loading=false;
-             
-           })*/
+              
+           })
            
          }
        }
