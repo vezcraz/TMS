@@ -30,7 +30,6 @@ def get_hod_data(request):
         current_user = request.user
         current_user_alias = 'Head Of Department'
         campus_alias = CampusType._member_names_[current_user.userprofile.campus]
-        # print(request.GET.get('application_type'))
         application_type = int(request.GET.get('application_type'))
         if application_type == TransferType.TS2PS.value:
             # applications where approval is pending
@@ -91,8 +90,26 @@ def get_hod_data(request):
                 'cgpa', 'thesis_locale', 'supervisor_email',
                 'thesis_subject', 'name_of_org', 'expected_deliverables',
                 'is_hod_approved', 'comments_from_supervisor',
-            )
+            ).order_by('applicant')
+            # updating with supervisor details
+            supervisor_emails = PS2TSTransfer.objects.filter(
+                hod_email = current_user.email,
+                is_supervisor_approved__gt = ApplicationsStatus.PENDING.value,
+                is_hod_approved = ApplicationsStatus.PENDING.value,
+            ).values('supervisor_email',
+            ).order_by('applicant')
+            supervisor_details = []
+            print(supervisor_emails)
+            for supervisor_email in list(supervisor_emails):
+                print(supervisor_email)
+                obj = User.objects.get(
+                    email=supervisor_email['supervisor_email'],
+                    userprofile__user_type=UserType.SUPERVISOR.value,
+                )
+                supervisor_details.append({'supervisor_name': obj.get_full_name()})
             pending_applications_list = list(pending_applications_qs)
+            for x, y in zip(pending_applications_list, supervisor_details):
+                x.update(y)
             pending_applications_list = clean_list(pending_applications_list)
             # approved applications
             approved_applications_qs = PS2TSTransfer.objects.filter(
@@ -105,8 +122,24 @@ def get_hod_data(request):
                 'cgpa', 'thesis_locale', 'supervisor_email',
                 'thesis_subject', 'name_of_org', 'expected_deliverables',
                 'is_hod_approved', 'comments_from_supervisor',
-            )
+            ).order_by('applicant')
+            # updating with supervisor wmail
+            supervisor_emails = PS2TSTransfer.objects.filter(
+                hod_email = current_user.email,
+                is_supervisor_approved__gt = ApplicationsStatus.PENDING.value,
+                is_hod_approved__gt = ApplicationsStatus.PENDING.value,
+            ).values('supervisor_email',
+            ).order_by('applicant')
+            supervisor_details = []
+            for supervisor_email in supervisor_emails:
+                obj = User.objects.get(
+                    email=supervisor_email['supervisor_email'],
+                    userprofile__user_type=UserType.SUPERVISOR.value,
+                )
+                supervisor_details.append({'supervisor_name': obj.get_full_name()})
             approved_applications_list = list(approved_applications_qs)
+            for x, y in zip(pending_applications_list, supervisor_details):
+                x.update(y)
             approved_applications_list = clean_list(approved_applications_list)
             response['error'] = False
             response['message'] = 'success'
@@ -122,7 +155,8 @@ def get_hod_data(request):
                 {'display':'Student First Name','prop':'applicant__user__first_name'},
                 {'display':'Student Last Name','prop':'applicant__user__last_name'},
                 {'display':'CGPA','prop':'cgpa'},
-                {'display': 'Supervisor (on-campus)', 'prop':'supervisor_email'},
+                {'display':'Supervisor Name', 'prop': 'supervisor_name'},
+                {'display':'Supervisor Email', 'prop':'supervisor_email'},
                 {'display':'Thesis Location','prop':'thesis_locale_alias'},
                 {'display':'Thesis Subject','prop':'thesis_subject'},
                 {'display':'Organisation','prop':'name_of_org'},
