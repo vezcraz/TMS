@@ -108,7 +108,7 @@ def notify_ts2ps(request):
 
 def mail(data, request, body):
     send_mail("Transfer Application: " + request.user.username, body,
-        'psdiary.bits@gmail.com',[str('data.hod_email')],
+        'psdiary.bits@gmail.com',[str(data.hod_email)],
         fail_silently=False)
 
 def get_authority_comments(userprofile):
