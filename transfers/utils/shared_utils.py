@@ -1,5 +1,5 @@
 # This file will contain utility functions that are not strictly related to a single user types and other places
-from transfers.constants import UserType, ApplicationsStatus, ThesisLocaleType
+from transfers.constants import UserType, ApplicationsStatus, ThesisLocaleType, TransferType
 from transfers.models import DeadlineModel, PS2TSTransfer, TS2PSTransfer
 from transfers.constants import TransferType
 from django.utils import timezone as datetime
@@ -17,7 +17,7 @@ def update_application(applicant, application_type, approved_by, status, comment
         if approved_by == UserType.SUPERVISOR.value:
             transfer_form.is_supervisor_approved = int(status)
             transfer_form.comments_from_supervisor = comments
-            if int(status)==1 and int(application_type)==0:
+            if int(status) == ApplicationsStatus.APPROVED.value and int(application_type) == TransferType.PS2TS.value:
                 notify_ps2ts(transfer_form,"hod")
         elif approved_by == UserType.HOD.value:
             transfer_form.is_hod_approved = int(status)
