@@ -3,6 +3,7 @@ from transfers.constants import UserType, ApplicationsStatus, ThesisLocaleType
 from transfers.models import DeadlineModel, PS2TSTransfer, TS2PSTransfer
 from transfers.constants import TransferType
 from django.utils import timezone as datetime
+from transfers.utils.student_utils import notify_ps2ts
 
 
 def update_application(applicant, application_type, approved_by, status, comments):
@@ -16,6 +17,8 @@ def update_application(applicant, application_type, approved_by, status, comment
         if approved_by == UserType.SUPERVISOR.value:
             transfer_form.is_supervisor_approved = int(status)
             transfer_form.comments_from_supervisor = comments
+            if int(status)==1 and int(application_type)==0:
+                notify_ps2ts(transfer_form,"hod")
         elif approved_by == UserType.HOD.value:
             transfer_form.is_hod_approved = int(status)
             transfer_form.comments_from_hod = comments
