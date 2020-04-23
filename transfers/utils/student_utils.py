@@ -115,12 +115,15 @@ def notify_ps2ts(data, receiver):
 def notify_ts2ps(request):
     body = ""
     data=TS2PSTransfer.objects.filter(applicant = request.user.userprofile)[0]
+    topHod="Dear Sir/Madam,\n\nGreetings from Practice School Division!\n\nPlease find below the details of the student who has applied for TS to PS transfer.  The last date to submit the recommendation is April 26th, 2020.\n"
     body =  str("\nID: " + data.applicant.user.username+
     "\nName: " + data.applicant.user.first_name + " " +data.applicant.user.last_name +
     "\nTransfer Type: " + data.get_sub_type_display()+
     "\nCGPA: " + str(data.cgpa)+
     "\nReason For Transfer: " + data.reason_for_transfer+
     "\nOrganization Name: " + data.name_of_org)
+    bottomHod="\n\nYou are kindly requested to recommend/not recommend the above student for further approval using the Transfer Management System.\n\nLink to access the Transfer Management System: http://bits-pilani.in/TMS/login/ \n\nAssociate Dean\nPractice School Division\n"
+    body=topHod+body+bottomHod
     mail(str(data.hod_email),str(data.applicant.user.username),body)
 
 def mail(email, username, body):
