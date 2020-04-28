@@ -149,7 +149,6 @@ def get_hod_data(request):
                 {'display':'Student First Name','prop':'applicant__user__first_name'},
                 {'display':'Student Last Name','prop':'applicant__user__last_name'},
                 {'display':'CGPA','prop':'cgpa'},
-                {'display':'Supervisor Name', 'prop': 'supervisor_name'},
                 {'display':'Supervisor Email', 'prop':'supervisor_email'},
                 {'display':'Thesis Location','prop':'thesis_locale_alias'},
                 {'display':'Thesis Subject','prop':'thesis_subject'},
