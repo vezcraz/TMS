@@ -7,6 +7,7 @@ from io import BytesIO as IO
 import xlsxwriter 
 count=1
 final=pd.DataFrame(columns=['Sr.No', 'Name', 'Stream'])
+flag=0
 def getFile(request, choice):
     #The script doesn't work if the models are not refreshed. 
     #That's why objectCode and this header should be always be put here instead of top
@@ -19,15 +20,19 @@ def getFile(request, choice):
     'xx11':psts.objects.filter(sub_type=1)}
     global count
     global final   
-    final=pd.DataFrame(columns=['Sr.No', 'Name', 'Stream']) #always mention the column attribute if want to have data in particular order
+    global flag
+    final=pd.DataFrame(columns=['Sr.No', 'ID','Name','Campus','Contact','Supervisor Name','Supervisor Email','HoD Name', 'HoD Email', 'Application Type','Supervisor Approval', 'HoD Approval', 'AD Approval']) #always mention the column attribute if want to have data in particular order
+
     if choice==1:
         filename="PS To TS"
+        flag=1
         makeFile(objectCode['01'],0)
     elif choice==2:
         filename="TS To PS"
         makeFile(objectCode['10'],0)
     elif choice==3:
         filename="PS-TS or TS-PS to TS-TS"
+        flag=1
         makeFile(objectCode['xx11'],0)
     elif choice==4:
         filename="PS-TS to PS-PS"
@@ -38,7 +43,8 @@ def getFile(request, choice):
     response=download(final,filename)
     #reset global vars
     count=1
-    final=pd.DataFrame(columns=['Sr.No', 'Name', 'Stream']) 
+    final=pd.DataFrame(columns=['Sr.No', 'ID','Name','Campus','Contact','Supervisor Name','Supervisor Email','HoD Name', 'HoD Email', 'Transfer Type','Supervisor Approval', 'HoD Approval', 'AD Approval']) 
+    flag=0
     return response
 
 def getFileHod(request, choice):
@@ -89,12 +95,32 @@ def makeFile(x,choice):
     for data in x:
             global count
             global final
+            global flag
             print(data.is_hod_approved)
             if data.is_hod_approved==1:
                 print(data.is_hod_approved)
                 temp={}
                 if choice==0:
-                    temp={'Sr.No':count, 'Name':data.applicant.user.first_name+' '+ data.applicant.user.last_name, 'Stream':data.get_sub_type_display()} #for psd folks
+                    Name=data.applicant.user.first_name
+                    ID=data.applicant.user.username
+                    Campus=data.applicant.get_campus_display()
+                    Contact=data.applicant.contact
+                    hodEmail=data.hod_email
+                    supApproved="NA"
+                    supEmail="NA"
+                    supName="NA"
+                    supApproved="NA"
+                    if flag:
+                        supEmail=data.supervisor_email
+                        sup=User.objects.filter(email= supEmail)[0]
+                        supName=sup.first_name + " " + sup.last_name
+                        supApproved=data.get_is_supervisor_approved_display()
+                    hod=User.objects.filter(email=hodEmail)[0]
+                    hodName=hod.first_name+" "+hod.last_name
+                    hodApproved=data.get_is_hod_approved_display()
+                    adApproved=data.get_is_ad_approved_display()
+                    #for psd folks
+                    temp={'Sr.No':count , 'ID':ID,'Name':Name,'Campus':Campus,'Contact':Contact,'Supervisor Name':supName,'Supervisor Email':supEmail,'HoD Name':hodName, 'HoD Email':hodEmail, 'Application Type':data.get_sub_type_display(),'Supervisor Approval':supApproved, 'HoD Approval':hodApproved, 'AD Approval':adApproved}
                 elif choice==2:
                     temp={'Sr.No':count, 'Name':data.applicant.user.first_name+' '+ data.applicant.user.last_name, 'Transfer Type':data.get_sub_type_display(), 'CGPA':str(data.cgpa),'Reason for Transfer':data.reason_for_transfer,'Organization Name':data.name_of_org  } #for hod: tsps
                 else:

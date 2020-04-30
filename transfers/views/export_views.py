@@ -16,7 +16,7 @@ def exp(request):
 	if request.method=='GET':
 		return render(request, 'transfers/export.html')
 	if request.method=='POST':
-		if request.user.is_superuser:
+		if request.user.userprofile.user_choices==4:
 			print(request.POST['type'])
 			response=getFile(request, int(request.POST['type']))
 		else:
